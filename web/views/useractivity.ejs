@@ -29,32 +29,32 @@
         });
     </script>
 
-    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4 w-full">
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
         <h1 class="text-3xl text-gray-800 font-bold mb-6">Actividad de Usuarios</h1>
 
         <!-- 1. Línea de progreso de usuarios -->
         <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4">Progreso de Usuarios en el Tiempo</h2>
-            <div id="main" style="width: 100%; height: 450px;"></div>
+            <h2 class="text-xl font-semibold text-center mb-4 text-black">Progreso de Usuarios en el Tiempo</h2>
+            <div id="main" style="width: 100%; height: 300px;"></div>
         </div>
 
         <!-- 2. Heatmap -->
         <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4">Progreso Detallado por Usuario por Módulo</h2>
+            <h2 class="text-xl font-semibold text-center mb-4 text-black">Progreso Detallado por Usuario por Módulo</h2>
             <div id="heatmap-progress" style="width: 100%; height: 400px;"></div>
         </div>
 
         <!-- 3. Tabla de quizzes con estrellas -->
         <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4">Historial de Quizzes y Desempeño</h2>
+            <h2 class="text-xl font-semibold text-center mb-4 text-black">Historial de Quizzes y Desempeño</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto text-center" aria-label="Historial de Quizzes">
                     <thead class="bg-gray-200 text-sm">
                         <tr>
-                            <th scope="col" class="px-4 py-2">Usuario</th>
-                            <th scope="col" class="px-4 py-2">Quiz</th>
-                            <th scope="col" class="px-4 py-2">Puntaje</th>
-                            <th scope="col" class="px-4 py-2">Estrellas</th>
+                            <th scope="col" class="px-4 py-2 text-black">Usuario</th>
+                            <th scope="col" class="px-4 py-2 text-black">Quiz</th>
+                            <th scope="col" class="px-4 py-2 text-black">Puntaje</th>
+                            <th scope="col" class="px-4 py-2 text-black">Estrellas</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm" id="quiz-performance-body"></tbody>
@@ -64,16 +64,16 @@
 
         <!-- 4. Barras de uso de ítems -->
         <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4">Uso de Ítems por Usuario</h2>
+            <h2 class="text-xl font-semibold text-center mb-4 text-black">Uso de Ítems por Usuario</h2>
             <div id="items-bar" style="width: 100%; height: 400px;"></div>
         </div>
 
         <!-- 5. Preguntas más intentadas o falladas -->
         <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4">Preguntas más Intentadas o Falladas por Usuario</h2>
+            <h2 class="text-xl font-semibold text-center mb-4 text-black">Preguntas más Intentadas o Falladas por Usuario</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto text-center" aria-label="Preguntas más intentadas o falladas">
-                    <thead class="bg-gray-200 text-sm">
+                    <thead class="bg-black text-sm">
                         <tr>
                             <th scope="col" class="px-4 py-2">Usuario</th>
                             <th scope="col" class="px-4 py-2">Pregunta</th>
@@ -84,18 +84,18 @@
                     </thead>
                     <tbody class="text-sm">
                         <tr>
-                            <td class="px-4 py-2">Usuario 1</td>
-                            <td class="px-4 py-2">¿Qué es un smart contract?</td>
-                            <td class="px-4 py-2">5</td>
-                            <td class="px-4 py-2">1</td>
+                            <td class="px-4 py-2 text-black">Usuario 1</td>
+                            <td class="px-4 py-2 text-black">¿Qué es un smart contract?</td>
+                            <td class="px-4 py-2 text-black">5</td>
+                            <td class="px-4 py-2 text-black">1</td>
                             <td class="px-4 py-2 text-red-500 font-bold">⚠️</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2">Usuario 2</td>
-                            <td class="px-4 py-2">¿Cómo funciona una blockchain?</td>
-                            <td class="px-4 py-2">3</td>
-                            <td class="px-4 py-2">3</td>
-                            <td class="px-4 py-2">✔️</td>
+                            <td class="px-4 py-2 text-black">Usuario 2</td>
+                            <td class="px-4 py-2 text-black">¿Cómo funciona una blockchain?</td>
+                            <td class="px-4 py-2 text-black">3</td>
+                            <td class="px-4 py-2 text-black">3</td>
+                            <td class="px-4 py-2 text-black">✔️</td>
                         </tr>
                     </tbody>
                 </table>
@@ -104,7 +104,7 @@
 
         <!-- 6. Timeline de desbloqueos -->
         <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4">Historial de Desbloqueos</h2>
+            <h2 class="text-xl font-semibold text-center mb-4 text-black">Historial de Desbloqueos</h2>
             <div id="timeline-unlocks" style="width: 100%; height: 400px;"></div>
         </div>
 
@@ -253,10 +253,10 @@
                 quizData.forEach(q => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td class="px-4 py-2">${q.usuario}</td>
-                        <td class="px-4 py-2">${q.quiz}</td>
-                        <td class="px-4 py-2">${q.puntaje}%</td>
-                        <td class="px-4 py-2">${'⭐'.repeat(q.estrellas)} <span class="sr-only">${q.estrellas} estrellas</span></td>
+                        <td class="px-4 py-2 text-black">${q.usuario}</td>
+                        <td class="px-4 py-2 text-black">${q.quiz}</td>
+                        <td class="px-4 py-2 text-black">${q.puntaje}%</td>
+                        <td class="px-4 py-2 text-black">${'⭐'.repeat(q.estrellas)} <span class="sr-only">${q.estrellas} estrellas</span></td>
                     `;
                     quizBody.appendChild(row);
                 });
