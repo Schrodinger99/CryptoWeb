@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard - CryptoChicks</title>
+        <link href="../public/css/output.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <body class="bg-gray-100 flex">
+        <!-- Navbar cargado dinámicamente -->
+        <div id="navbar-placeholder"></div>
+        <script>
+            fetch('partials/navbar.html')
+            .then(response => response.text())
+            .then(data => {document.getElementById('navbar-placeholder').innerHTML = data;});
+        </script>
+
+    <!-- Content -->
+        <!-- Main -->
+        <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4">
+        <h1 class="text-3xl dark:text-gray-800 font-bold mb-6">Actividad de Usuarios</h1>
+        
+        <!-- Gráfica desde archivo externo -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2 mt-14">
+            <div id="main" style="width: 800px; height: 500px; margin: auto;"></div>
+            <script>
+                var chartDom = document.getElementById('main');
+                var myChart = echarts.init(chartDom);
+                var option;
+                option = {
+                    title: {text: 'titulo', subtext: 'subtitulo'},
+                    tooltip: { trigger: 'axis' },
+                    legend: { data: ['dato1', 'dato2', 'dato3'] },
+                    toolbox: {
+                        show: true,
+                        feature: {magicType: { show: true, type: ['stack', 'tiled'] },saveAsImage: { show: true }}
+                    },
+                    xAxis: { type: 'category', boundaryGap: false, data: ['1', '2', '3', '4', '5', '6', '7'] },
+                    yAxis: { type: 'value' },
+                    series: [
+                        { name: 'dato1', type: 'line', smooth: true, data: [10, 12, 21, 54, 260, 830, 710] },
+                        { name: 'dato2', type: 'line', smooth: true, data: [30, 182, 434, 791, 390, 30, 10] },
+                        { name: 'dato3', type: 'line', smooth: true, data: [1320, 1132, 601, 234, 120, 90, 20] }
+                    ]
+                };
+                option && myChart.setOption(option);
+            </script>
+        </div>
+        <!-- 1. Progreso detallado por usuario por módulo (Heatmap) -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
+            <h2 class="text-xl font-semibold text-center mb-4">Progreso detallado por usuario por módulo</h2>
+            <div id="heatmap-progress" style="width: 100%; height: 400px;"></div>
+        </div>
+        
+        <!-- 2. Historial de quizzes y desempeño (Tabla con estrellas) -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
+            <h2 class="text-xl font-semibold text-center mb-4">Historial de quizzes y desempeño</h2>
+            <div id="quiz-performance" style="width: 100%; overflow-x: auto;">
+            <table class="min-w-full table-auto text-center">
+                <thead class="bg-gray-200 text-sm">
+                <tr>
+                    <th class="px-4 py-2">Usuario</th>
+                    <th class="px-4 py-2">Quiz</th>
+                    <th class="px-4 py-2">Puntaje</th>
+                    <th class="px-4 py-2">Estrellas</th>
+                </tr>
+                </thead>
+                <tbody class="text-sm">
+                <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+            </div>
+        </div>
+        
+        <!-- 3. Uso de ítems por usuario (Barras agrupadas) -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
+            <h2 class="text-xl font-semibold text-center mb-4">Uso de ítems por usuario</h2>
+            <div id="items-bar" style="width: 100%; height: 400px;"></div>
+        </div>
+        
+        <!-- 4. Preguntas más intentadas o falladas por usuario (Tabla con alertas) -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
+            <h2 class="text-xl font-semibold text-center mb-4">Preguntas más intentadas o falladas por usuario</h2>
+            <div id="question-alerts" style="width: 100%; overflow-x: auto;">
+            <table class="min-w-full table-auto text-center">
+                <thead class="bg-gray-200 text-sm">
+                <tr>
+                    <th class="px-4 py-2">Usuario</th>
+                    <th class="px-4 py-2">Pregunta</th>
+                    <th class="px-4 py-2">Intentos</th>
+                    <th class="px-4 py-2">Correctas</th>
+                    <th class="px-4 py-2">Alerta</th>
+                </tr>
+                </thead>
+                <tbody class="text-sm">
+                <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+            </div>
+        </div>
+        
+        <!-- 5. Historial de desbloqueos de quizzes y módulos (Línea de tiempo) -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
+            <h2 class="text-xl font-semibold text-center mb-4">Historial de desbloqueos de quizzes y módulos</h2>
+            <div id="timeline-unlocks" style="width: 100%; height: 400px;"></div>
+        </div>
+        <script src="../node_modules/flowbite/dist/flowbite.js"></script>
+    </body>
+</html>

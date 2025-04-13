@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@import "tailwindcss/preflight";
+
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+@tailwind utilities;
+
+/* Habilita el modo oscuro con clase */
+@layer base {
+    @media (prefers-color-scheme: dark) {
+        :root {color-scheme: dark;}
+    }
+}
+

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <title>Dashboard - CryptoChicks</title>
+    <link href="../public/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  </head>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <body class="bg-gray-100 flex">
+    <!-- Navbar cargado dinámicamente -->
+    <div id="navbar-placeholder"></div>
+    <script>
+      fetch('partials/navbar.html')
+        .then(response => response.text())
+        .then(data => {document.getElementById('navbar-placeholder').innerHTML = data;});
+    </script>
+
+    <!-- Content -->
+  <!-- Main -->
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4">
+      <h1 class="text-3xl dark:text-gray-800 font-bold mb-6">Dashboard</h1>
+
+      <!-- Top Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+          <h3 class="text-lg dark:text-gray-600 font-semibold">Total de usuarios registrados</h3>
+          <p class="text-2xl dark:text-gray-800 font-bold">1,234</p>
+          <span class="text-green-600 text-sm">📈 8.5% Up from yesterday</span>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+          <h3 class="text-lg dark:text-gray-600 font-semibold">Quests completadas hoy</h3>
+          <p class="text-2xl dark:text-gray-800 font-bold">128</p>
+          <span class="text-green-600 text-sm">📈 1.3% Up from past week</span>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+          <h3 class="text-lg dark:text-gray-600 font-semibold">Tasa de retención semanal</h3>
+          <p class="text-2xl dark:text-gray-800 font-bold">73%</p>
+          <span class="text-red-600 text-sm">📉 4.3% Down from yesterday</span>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <div id="nationality-chart" style="height: 400px;"></div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <h2 class="text-xl dark:text-gray-800 font-semibold mb-4 text-center">Distribución de quests por día</h2>
+        <div id="stacked-bar-chart" style="height: 400px;"></div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <h2 class="text-xl dark:text-gray-800 font-semibold mb-4 text-center">Avance porcentual por Módulo</h2>
+        <div id="main" style="height: 400px;"></div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <h2 class="text-xl dark:text-gray-800 font-semibold mb-4 text-center">Quests completadas por tipo</h2>
+        <div id="quest-chart" style="height: 400px;"></div>
+      </div>
+
+    <!-- Plotting Charts -->
+    <script>
+      // Gráfico de pastel
+      var dom = document.getElementById('nationality-chart');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      option = {
+        title: {
+          text: 'Distribución de usuarios por nacionalidad ',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: 'Accesos',
+            type: 'pie',
+            radius: '50%',
+            data: [,
+              { value: 735, name: 'México' },
+              { value: 580, name: 'Estados Unidos' },
+              { value: 484, name: 'Europa' },
+              { value: 300, name: 'Sudamerica' }
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+
+      // Stacked Bar Chart
+      var stackedChartDom = document.getElementById('stacked-bar-chart');
+      var stackedChart = echarts.init(stackedChartDom);
+      var stackedOption;
+
+      stackedOption = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        legend: {},
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'value'
+        },
+        yAxis: {
+          type: 'category',
+          data: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+        },
+        series: [
+          {
+            name: 'Trivia',
+            type: 'bar',
+            stack: 'total',
+            label: { show: true },
+            emphasis: { focus: 'series' },
+            data: [12, 15, 18, 14, 16, 9, 10]
+          },
+          {
+            name: 'Memorama',
+            type: 'bar',
+            stack: 'total',
+            label: { show: true },
+            emphasis: { focus: 'series' },
+            data: [10, 11, 9, 13, 14, 7, 8]
+          },
+          {
+            name: 'Lección',
+            type: 'bar',
+            stack: 'total',
+            label: { show: true },
+            emphasis: { focus: 'series' },
+            data: [20, 22, 21, 23, 25, 18, 19]
+          },
+          {
+            name: 'Exploración',
+            type: 'bar',
+            stack: 'total',
+            label: { show: true },
+            emphasis: { focus: 'series' },
+            data: [8, 7, 9, 6, 5, 4, 6]
+          }
+        ]
+      };
+
+      if (stackedOption && typeof stackedOption === 'object') {
+        stackedChart.setOption(stackedOption);
+      }
+
+      // New Sorted Bar Chart
+      var chartDom = document.getElementById('main');
+      var myChart = echarts.init(chartDom);
+      var option;
+
+      option = {
+        dataset: [
+          {
+            dimensions: ['modulo', 'porcentaje'],
+            source: [
+              ['Modulo 1', 92],
+              ['Modulo 2', 75],
+              ['Modulo 3', 83],
+              ['Modulo 4', 68]
+            ]
+          },
+          {
+            transform: {
+              type: 'sort',
+              config: { dimension: 'porcentaje', order: 'desc' }
+            }
+          }
+        ],
+        xAxis: {
+          type: 'category',
+          axisLabel: { interval: 0 }
+        },
+        yAxis: {},
+        series: {
+          type: 'bar',
+          encode: { x: 'modulo', y: 'porcentaje' },
+          datasetIndex: 1,
+          showBackground: true,
+          backgroundStyle: {
+            color: 'rgba(180, 180, 180, 0.2)'
+          }
+        }
+      };
+
+      option && myChart.setOption(option);
+      window.addEventListener('resize', myChart.resize);
+      window.addEventListener('resize', stackedChart.resize);
+
+      // Quest Popularity Chart
+      var questChartDom = document.getElementById('quest-chart');
+      var questChart = echarts.init(questChartDom);
+      var questOption;
+
+      questOption = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        xAxis: {
+          type: 'category',
+          data: ['Ahorcados', 'Memoramas', 'Leccion', 'ejemplo4']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: 'Completadas',
+            type: 'bar',
+            data: [120, 200, 150, 80], // Datos simulados
+            label: {
+              show: true,
+              position: 'top'
+            },
+            itemStyle: {
+              color: '#60a5fa'
+            }
+          }
+        ]
+      };
+
+      if (questOption && typeof questOption === 'object') {
+        questChart.setOption(questOption);
+      }
+
+      window.addEventListener('resize', questChart.resize);
+    </script>
+
+    </main>
+    
+    <script src="../node_modules/flowbite/dist/flowbite.js"></script>
+  </body>
+</html>
