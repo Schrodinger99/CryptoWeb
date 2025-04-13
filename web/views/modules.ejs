@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Modules - CryptoChicks</title>
+        <link href="/public/css/output.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </head>
+    <body class="bg-gray-100 dark:bg-gray-900">
+        <!-- Navbar -->
+        <div id="navbar-placeholder"></div>
+
+        <!-- Content -->
+        <main class="p-4 sm:ml-64 pt-20">
+            <div class="container mx-auto px-4">
+                <h1 class="text-2xl font-bold mb-6">Módulos de Aprendizaje</h1>
+                
+                <!-- Module Cards - Ajustado el grid y los márgenes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                    <% modules.forEach(module => { %>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-2"><%= module.name %></h3>
+                            <div class="mb-4">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-pink-600 h-2.5 rounded-full" style="width: <%= module.progress ? module.progress : 0 %>%"></div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1"><%= module.progress %>% complete</p>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-600">
+                                <span><%= module.quizzes %> quizzes</span>
+                                <span><%= module.activities %> activities</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="px-2 py-1 text-xs rounded-full 
+                                    <%= module.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %>">
+                                    <%= module.status %>
+                                </span>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            // Cambiar esta línea para usar ruta absoluta
+            fetch('/partials/navbar')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbar-placeholder').innerHTML = data;
+                });
+        </script>
+        <script src="/public/js/flowbite.js"></script>
+    </body>
+</html>
