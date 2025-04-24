@@ -18,29 +18,7 @@
                 <h1 class="text-2xl font-bold mb-6">Módulos de Aprendizaje</h1>
                 
                 <!-- Module Cards - Ajustado el grid y los márgenes -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                    <% modules.forEach(module => { %>
-                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                            <h3 class="text-xl font-semibold mb-2"><%= module.name %></h3>
-                            <div class="mb-4">
-                                <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div class="bg-pink-600 h-2.5 rounded-full" style="width: <%= module.progress ? module.progress : 0 %>%"></div>
-                                </div>
-                                <p class="text-sm text-gray-600 mt-1"><%= module.progress %>% complete</p>
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600">
-                                <span><%= module.quizzes %> quizzes</span>
-                                <span><%= module.activities %> activities</span>
-                            </div>
-                            <div class="mt-4">
-                                <span class="px-2 py-1 text-xs rounded-full 
-                                    <%= module.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %>">
-                                    <%= module.status %>
-                                </span>
-                            </div>
-                        </div>
-                    <% }); %>
-                </div>
+                <div id="modules-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"></div>
             </div>
         </main>
 
@@ -52,6 +30,37 @@
                     document.getElementById('navbar-placeholder').innerHTML = data;
                 });
         </script>
-        <script src="/public/js/flowbite.js"></script>
+        <script>
+          fetch('/api/modules')
+            .then(res => res.json())
+            .then(data => {
+              const container = document.getElementById('modules-container');
+              data.modules.forEach(module => {
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-gray-800 rounded-lg shadow-md p-6';
+                card.innerHTML = `
+                  <h3 class="text-xl font-semibold mb-2">${module.name}</h3>
+                  <div class="mb-4">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                      <div class="bg-pink-600 h-2.5 rounded-full" style="width: ${module.progress || 0}%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">${module.progress}% complete</p>
+                  </div>
+                  <div class="flex justify-between text-sm text-gray-600">
+                    <span>${module.quizzes} quizzes</span>
+                    <span>${module.activities} activities</span>
+                  </div>
+                  <div class="mt-4">
+                    <span class="px-2 py-1 text-xs rounded-full ${module.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">
+                      ${module.status}
+                    </span>
+                  </div>
+                `;
+                container.appendChild(card);
+              });
+            })
+            .catch(err => console.error('Error loading modules:', err));
+        </script>
+        <script src="../../node_modules/flowbite/dist/flowbite.js"></script>
     </body>
 </html>

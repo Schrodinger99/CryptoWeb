@@ -6,12 +6,15 @@
     <link href="../public/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+      tailwind.config = { darkMode: 'class' };
+    </script>
   </head>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <body class="bg-gray-100 flex">
+  <body class="bg-gray-100 dark:bg-gray-900 flex">
     <!-- Navbar cargado dinámicamente -->
     <div id="navbar-placeholder"></div>
     <script>
@@ -21,53 +24,64 @@
           document.getElementById('navbar-placeholder').innerHTML = data;
         });
     </script>
+    <div class="fixed top-4 right-4">
+      <button id="theme-toggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
+        Toggle Theme
+      </button>
+    </div>
 
     <!-- Content -->
   <!-- Main -->
     <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
-      <h1 class="text-3xl dark:text-gray-800 font-bold mb-6">Dashboard</h1>
+      <h1 class="text-3xl text-gray-900 dark:text-white font-bold mb-6">Dashboard</h1>
 
       <!-- Top Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-4 text-center">
-          <h3 class="text-lg dark:text-gray-600 font-semibold">Total de usuarios registrados</h3>
-          <p class="text-2xl dark:text-gray-800 font-bold">1,234</p>
-          <span class="text-green-600 text-sm">📈 8.5% Up from yesterday</span>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Total de usuarios registrados</h3>
+          <p class="text-2xl text-gray-900 dark:text-white font-bold">1,234</p>
+          <span class="text-green-600 dark:text-green-400 text-sm">📈 8.5% Up from yesterday</span>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 text-center">
-          <h3 class="text-lg dark:text-gray-600 font-semibold">Quests completadas hoy</h3>
-          <p class="text-2xl dark:text-gray-800 font-bold">128</p>
-          <span class="text-green-600 text-sm">📈 1.3% Up from past week</span>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Quests completadas hoy</h3>
+          <p class="text-2xl text-gray-900 dark:text-white font-bold">128</p>
+          <span class="text-green-600 dark:text-green-400 text-sm">📈 1.3% Up from past week</span>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 text-center">
-          <h3 class="text-lg dark:text-gray-600 font-semibold">Tasa de retención semanal</h3>
-          <p class="text-2xl dark:text-gray-800 font-bold">73%</p>
-          <span class="text-red-600 text-sm">📉 4.3% Down from yesterday</span>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Tasa de retención semanal</h3>
+          <p class="text-2xl text-gray-900 dark:text-white font-bold">73%</p>
+          <span class="text-red-600 dark:text-red-400 text-sm">📉 4.3% Down from yesterday</span>
         </div>
       </div>
 
       <!-- Charts -->
-      <div class="bg-white rounded-lg shadow p-4 mb-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
         <div id="nationality-chart" style="height: 400px;"></div>
       </div>
-      <div class="bg-white rounded-lg shadow p-4 mb-6">
-        <h2 class="text-xl dark:text-gray-800 font-semibold mb-4 text-center">Distribución de quests por día</h2>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+        <h2 class="text-xl text-gray-900 dark:text-white font-semibold mb-4 text-center">Distribución de quests por día</h2>
         <div id="stacked-bar-chart" style="height: 400px;"></div>
       </div>
-      <div class="bg-white rounded-lg shadow p-4 mb-6">
-        <h2 class="text-xl dark:text-gray-800 font-semibold mb-4 text-center">Avance porcentual por Módulo</h2>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+        <h2 class="text-xl text-gray-900 dark:text-white font-semibold mb-4 text-center">Avance porcentual por Módulo</h2>
         <div id="main" style="height: 400px;"></div>
       </div>
-      <div class="bg-white rounded-lg shadow p-4 mb-6">
-        <h2 class="text-xl dark:text-gray-800 font-semibold mb-4 text-center">Quests completadas por tipo</h2>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+        <h2 class="text-xl text-gray-900 dark:text-white font-semibold mb-4 text-center">Quests completadas por tipo</h2>
         <div id="quest-chart" style="height: 400px;"></div>
       </div>
 
     <!-- Plotting Charts -->
     <script>
+      function currentTheme() {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'dark') return 'dark';
+        if (stored === 'light') return 'light';
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
       // Gráfico de pastel
       var dom = document.getElementById('nationality-chart');
-      var myChart = echarts.init(dom, null, {
+      var myChart = echarts.init(dom, currentTheme(), {
         renderer: 'canvas',
         useDirtyRect: false
       });
@@ -113,7 +127,7 @@
 
       // Stacked Bar Chart
       var stackedChartDom = document.getElementById('stacked-bar-chart');
-      var stackedChart = echarts.init(stackedChartDom);
+      var stackedChart = echarts.init(stackedChartDom, currentTheme());
       var stackedOption;
 
       stackedOption = {
@@ -179,7 +193,7 @@
 
       // New Sorted Bar Chart
       var chartDom = document.getElementById('main');
-      var myChart = echarts.init(chartDom);
+      var myChart = echarts.init(chartDom, currentTheme());
       var option;
 
       option = {
@@ -222,7 +236,7 @@
 
       // Quest Popularity Chart
       var questChartDom = document.getElementById('quest-chart');
-      var questChart = echarts.init(questChartDom);
+      var questChart = echarts.init(questChartDom, currentTheme());
       var questOption;
 
       questOption = {
@@ -265,5 +279,29 @@
     </main>
     
     <script src="../node_modules/flowbite/dist/flowbite.js"></script>
+    <script>
+      (function() {
+        const toggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          root.classList.add('dark');
+        }
+        toggle.addEventListener('click', () => {
+          if (root.classList.toggle('dark')) {
+            localStorage.setItem('theme', 'dark');
+          } else {
+            localStorage.setItem('theme', 'light');
+          }
+          // Re-init charts with new theme
+          myChart.dispose();
+          stackedChart.dispose();
+          myChart.dispose();
+          questChart.dispose();
+          // call a function to re-create charts (could reload page or extract chart code into a function)
+          location.reload();
+        });
+      })();
+    </script>
   </body>
 </html>

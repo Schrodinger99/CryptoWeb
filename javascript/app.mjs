@@ -11,14 +11,14 @@ const app = express();
 const port = process.env.PORT ?? 8080;
 const ipAddress = process.env.C9_HOSTNAME ?? 'localhost';
 
-// Set the views directory path
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
-
-// Update static file serving
-app.use('/public', express.static(path.join(__dirname, 'public')));
-app.use('/img', express.static(path.join(__dirname, 'views/img')));
-app.use('/partials', express.static(path.join(__dirname, 'views/partials')));
+// Serve CSS files from the css folder
+app.use('/css', express.static(path.join(__dirname, '..', 'css')));
+// Serve Flowbite JS from node_modules
+app.use('/js', express.static(path.join(__dirname, '..', 'node_modules', 'flowbite', 'dist')));
+app.use('/img', express.static(path.join(__dirname, '..', 'img')));
+app.use('/partials', express.static(path.join(__dirname, '..', 'partials')));
+// Serve root-level HTML files
+app.use(express.static(path.join(__dirname, '..')));
 app.use(express.urlencoded({ extended: true }));
 
 // Sesiones
@@ -42,9 +42,21 @@ function requireAuth(req, res, next) {
     if (req.session.userId) {
         next();
     } else {
-        res.redirect('/login');
+        res.redirect('/index.html');
     }
 }
+
+// API endpoint to fetch modules data
+app.get('/api/modules', requireAuth, (req, res) => {
+    const moduleData = {
+        modules: [
+            { id: 1, name: 'Introducción a Blockchain', progress: 85, status: 'Completed', quizzes: 4, activities: 6 },
+            { id: 2, name: 'Criptomonedas Básicas', progress: 60, status: 'In Progress', quizzes: 3, activities: 5 },
+            { id: 3, name: 'Smart Contracts', progress: 30, status: 'In Progress', quizzes: 5, activities: 8 }
+        ]
+    };
+    res.json(moduleData);
+});
 
 // Datos de ejemplo para el dashboard
 // (esto debería ser reemplazado por datos reales de la base de datos)
@@ -98,12 +110,12 @@ const mockDashboardData = {
 
 // Rutas principales
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    res.redirect('/index.html');
 });
 
 // Registro
 app.get('/register', (req, res) => {
-    res.render('register');
+    res.sendFile(path.join(__dirname, '..', 'register.html'));
 });
 
 app.post('/register', async (req, res) => {
@@ -119,7 +131,7 @@ app.post('/register', async (req, res) => {
         'INSERT INTO Jugadores (nombre_usuario, correo, contrasena, rol) VALUES (?, ?, ?, ?)',
         [username.trim(), email.trim(), password.trim(), role]
     );
-    res.redirect('/login');
+    res.redirect('/index.html');
     } catch (err) {
         res.status(500).send('Error al registrar usuario.');
     } finally {
@@ -127,42 +139,35 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Login
+// Login page
 app.get('/login', (req, res) => {
-    res.render('login', { error: null });
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    
     // Test credentials
     const validCredentials = [
         { username: 'admin', password: '123456', role: 'admin' },
         { username: 'analyst', password: '123456', role: 'analyst' }
     ];
-
-    const user = validCredentials.find(u => 
+    const user = validCredentials.find(u =>
         u.username === username && u.password === password
     );
-
     if (user) {
         req.session.userId = 1;
         req.session.username = user.username;
         req.session.role = user.role;
         res.redirect('/dashboard');
     } else {
-        res.render('login', { 
-            error: 'Invalid credentials. Try admin/123456 or analyst/123456' 
-        });
+        // Redirect back to login with an error message
+        res.redirect(`/index.html?error=${encodeURIComponent('Invalid credentials. Try admin/123456 or analyst/123456')}`);
     }
 });
 
 // Forgot Password routes
 app.get('/forgot-password', (req, res) => {
-    res.render('forgot-password', { 
-        error: null, 
-        success: null 
-    });
+    res.sendFile(path.join(__dirname, '..', 'forgot-password.html'));
 });
 
 app.post('/forgot-password', async (req, res) => {
@@ -173,20 +178,14 @@ app.post('/forgot-password', async (req, res) => {
     // 1. Verify email exists in database
     // 2. Generate reset token
     // 3. Send email with reset link
-    res.render('forgot-password', {
-        error: null,
-        success: 'If this email is registered, you will receive password reset instructions shortly.'
-    });
+    // Redirect back to forgot-password page with success message
+    res.redirect(`/forgot-password.html?success=${encodeURIComponent('If this email is registered, you will receive password reset instructions shortly.')}`);
 });
 
 // Dashboard route - simplificado para pruebas
 app.get('/dashboard', (req, res) => {
     try {
-        res.render('dashboard', {
-            username: req.session?.username || 'Demo User',
-            role: req.session?.role || 'admin',
-            data: mockDashboardData
-        });
+        res.sendFile(path.join(__dirname, '..', 'dashboard.html'));
     } catch (error) {
         console.error('Error loading dashboard:', error);
         res.status(500).send('Error loading dashboard');
@@ -195,10 +194,7 @@ app.get('/dashboard', (req, res) => {
 
 // Ruta para cargar el navbar
 app.get('/partials/navbar', (req, res) => {
-    res.render('partials/navbar', {
-        username: req.session?.username || 'Demo User',
-        role: req.session?.role || 'admin'
-    });
+    res.sendFile(path.join(__dirname, '..', 'partials', 'navbar.html'));
 });
 
 // Modules route
@@ -234,7 +230,7 @@ app.get('/modules', (req, res) => {
                 }
             ]
         };
-        res.render('modules', moduleData);
+        res.sendFile(path.join(__dirname, '..', 'modules.html'));
     } catch (error) {
         console.error('Error loading modules:', error);
         res.status(500).send('Error loading modules');
@@ -244,10 +240,7 @@ app.get('/modules', (req, res) => {
 // Settings route
 app.get('/settings', (req, res) => {  // Removido requireAuth temporalmente para pruebas
     try {
-        res.render('settings', { 
-            username: req.session?.username || 'Demo User',
-            role: req.session?.role || 'admin'
-        });
+        res.sendFile(path.join(__dirname, '..', 'settings.html'));
     } catch (error) {
         console.error('Error loading settings:', error);
         res.status(500).send('Error loading settings');
@@ -263,7 +256,7 @@ app.get('/useractivity', (req, res) => {
             role: req.session?.role || 'admin',
             // Añadir más datos según sea necesario
         };
-        res.render('useractivity', activityData);
+        res.sendFile(path.join(__dirname, '..', 'useractivity.html'));
     } catch (error) {
         console.error('Error loading user activity:', error);
         res.status(500).send('Error loading user activity');
@@ -274,18 +267,18 @@ app.get('/useractivity', (req, res) => {
 app.get('/logout', (req, res) => {
     try {
         req.session.destroy(() => {
-            res.render('logout');  // Primero muestra la página de logout
+            res.sendFile(path.join(__dirname, '..', 'logout.html'));
         });
     } catch (error) {
         console.error('Error during logout:', error);
-        res.redirect('/login');
+        res.redirect('/index.html');
     }
 });
 
 // Página 404
 app.use((req, res) => {
     const url = req.originalUrl;
-    res.status(404).render('not_found', { url });
+    res.status(404).sendFile(path.join(__dirname, '..', 'not_found.html'));
 });
 
 app.listen(port, () => {

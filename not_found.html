@@ -17,7 +17,7 @@
                 La página que buscas no existe o ha sido movida.
             </p>
             <p class="text-gray-500 dark:text-gray-500 mb-8">
-                URL solicitada: <%= url %>
+                URL solicitada: <span id="requested-url"></span>
             </p>
             <a href="/dashboard" 
                class="inline-block px-6 py-2 text-white bg-pink-500 rounded-lg hover:bg-pink-600">
@@ -25,5 +25,8 @@
             </a>
         </div>
     </div>
+<script>
+  document.getElementById('requested-url').textContent = window.location.pathname;
+</script>
 </body>
 </html>
