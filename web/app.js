@@ -13,7 +13,7 @@ const ipAddress = process.env.C9_HOSTNAME ?? 'localhost';
 
 // Set the views directory path
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
 
 // Update static file serving
 app.use('/public', express.static(path.join(__dirname, 'public')));
