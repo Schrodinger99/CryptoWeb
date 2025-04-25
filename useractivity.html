@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - CryptoChicks</title>
-    <link href="/public/css/output.css" rel="stylesheet">
+    <link href="css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 </head>
-<body class="bg-gray-100 flex">
+<body class="bg-gray-100 dark:bg-gray-900 flex">
 
+    <!-- Navbar cargado dinámicamente -->
     <div id="navbar-placeholder"></div>
     <script>
         fetch('/partials/navbar.html')
@@ -29,32 +30,34 @@
         });
     </script>
 
-    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
-        <h1 class="text-3xl text-gray-800 font-bold mb-6">Actividad de Usuarios</h1>
+    <!-- Content -->
+    <!-- Main -->
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
+        <h1 class="text-3xl text-gray-800 dark:text-white font-bold mb-6">Actividad de Usuarios</h1>
 
         <!-- 1. Línea de progreso de usuarios -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Progreso de Usuarios en el Tiempo</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Progreso de Usuarios en el Tiempo</h2>
             <div id="main" style="width: 100%; height: 300px;"></div>
         </div>
 
         <!-- 2. Heatmap -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Progreso Detallado por Usuario por Módulo</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Progreso Detallado por Usuario por Módulo</h2>
             <div id="heatmap-progress" style="width: 100%; height: 400px;"></div>
         </div>
 
         <!-- 3. Tabla de quizzes con estrellas -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Historial de Quizzes y Desempeño</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Historial de Quizzes y Desempeño</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto text-center" aria-label="Historial de Quizzes">
-                    <thead class="bg-gray-200 text-sm">
+                    <thead class="bg-gray-200 dark:bg-gray-600 text-sm">
                         <tr>
-                            <th scope="col" class="px-4 py-2 text-black">Usuario</th>
-                            <th scope="col" class="px-4 py-2 text-black">Quiz</th>
-                            <th scope="col" class="px-4 py-2 text-black">Puntaje</th>
-                            <th scope="col" class="px-4 py-2 text-black">Estrellas</th>
+                            <th scope="col" class="px-4 py-2 text-black dark:text-white">Usuario</th>
+                            <th scope="col" class="px-4 py-2 text-black dark:text-white">Quiz</th>
+                            <th scope="col" class="px-4 py-2 text-black dark:text-white">Puntaje</th>
+                            <th scope="col" class="px-4 py-2 text-black dark:text-white">Estrellas</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm" id="quiz-performance-body"></tbody>
@@ -63,39 +66,39 @@
         </div>
 
         <!-- 4. Barras de uso de ítems -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Uso de Ítems por Usuario</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Uso de Ítems por Usuario</h2>
             <div id="items-bar" style="width: 100%; height: 400px;"></div>
         </div>
 
         <!-- 5. Preguntas más intentadas o falladas -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Preguntas más Intentadas o Falladas por Usuario</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Preguntas más Intentadas o Falladas por Usuario</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto text-center" aria-label="Preguntas más intentadas o falladas">
                     <thead class="bg-black text-sm">
                         <tr>
-                            <th scope="col" class="px-4 py-2">Usuario</th>
-                            <th scope="col" class="px-4 py-2">Pregunta</th>
-                            <th scope="col" class="px-4 py-2">Intentos</th>
-                            <th scope="col" class="px-4 py-2">Correctas</th>
-                            <th scope="col" class="px-4 py-2">Alerta</th>
+                            <th scope="col" class="px-4 py-2 text-white">Usuario</th>
+                            <th scope="col" class="px-4 py-2 text-white">Pregunta</th>
+                            <th scope="col" class="px-4 py-2 text-white">Intentos</th>
+                            <th scope="col" class="px-4 py-2 text-white">Correctas</th>
+                            <th scope="col" class="px-4 py-2 text-white">Alerta</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
                         <tr>
-                            <td class="px-4 py-2 text-black">Usuario 1</td>
-                            <td class="px-4 py-2 text-black">¿Qué es un smart contract?</td>
-                            <td class="px-4 py-2 text-black">5</td>
-                            <td class="px-4 py-2 text-black">1</td>
+                            <td class="px-4 py-2 text-black dark:text-white">Usuario 1</td>
+                            <td class="px-4 py-2 text-black dark:text-white">¿Qué es un smart contract?</td>
+                            <td class="px-4 py-2 text-black dark:text-white">5</td>
+                            <td class="px-4 py-2 text-black dark:text-white">1</td>
                             <td class="px-4 py-2 text-red-500 font-bold">⚠️</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2 text-black">Usuario 2</td>
-                            <td class="px-4 py-2 text-black">¿Cómo funciona una blockchain?</td>
-                            <td class="px-4 py-2 text-black">3</td>
-                            <td class="px-4 py-2 text-black">3</td>
-                            <td class="px-4 py-2 text-black">✔️</td>
+                            <td class="px-4 py-2 text-black dark:text-white">Usuario 2</td>
+                            <td class="px-4 py-2 text-black dark:text-white">¿Cómo funciona una blockchain?</td>
+                            <td class="px-4 py-2 text-black dark:text-white">3</td>
+                            <td class="px-4 py-2 text-black dark:text-white">3</td>
+                            <td class="px-4 py-2 text-black dark:text-white">✔️</td>
                         </tr>
                     </tbody>
                 </table>
@@ -103,18 +106,26 @@
         </div>
 
         <!-- 6. Timeline de desbloqueos -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Historial de Desbloqueos</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Historial de Desbloqueos</h2>
             <div id="timeline-unlocks" style="width: 100%; height: 400px;"></div>
         </div>
 
         <!-- Scripts -->
         <script>
+            function currentTheme() {
+                const stored = localStorage.getItem('theme');
+                if (stored === 'dark') return 'dark';
+                if (stored === 'light') return 'light';
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
             // Función para inicializar y redimensionar gráficos
             function initializeCharts() {
                 // 1. Línea de progreso
-                var myChart = echarts.init(document.getElementById('main'));
+                var myChart = echarts.init(document.getElementById('main'), currentTheme());
                 myChart.setOption({
+                    backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff',
                     tooltip: { trigger: 'axis' },
                     legend: {
                         data: ['Módulos Completados', 'Quizzes Aprobados', 'Minutos de Estudio']
@@ -128,12 +139,11 @@
                         { name: 'Módulos Completados', type: 'line', data: [5, 12, 18, 35, 50, 40, 60] },
                         { name: 'Quizzes Aprobados', type: 'line', data: [3, 8, 15, 25, 30, 28, 32] },
                         { name: 'Minutos de Estudio', type: 'line', data: [100, 200, 150, 300, 250, 230, 280] }
-                    ],
-                    responsive: true
+                    ]
                 });
 
-                // 2. Heatmap - Corregido el formato de datos
-                var heatmapChart = echarts.init(document.getElementById('heatmap-progress'));
+                // 2. Heatmap
+                var heatmapChart = echarts.init(document.getElementById('heatmap-progress'), currentTheme());
                 var heatmapData = [
                     {value: [0, 0, 75], name: 'Usu 1 - Mód 1: 75%'},
                     {value: [1, 0, 60], name: 'Usu 1 - Mód 2: 60%'},
@@ -152,11 +162,11 @@
                     {value: [2, 3, 70], name: 'Usu 4 - Mód 3: 70%'},
                     {value: [3, 3, 85], name: 'Usu 4 - Mód 4: 85%'}
                 ];
-                
                 heatmapChart.setOption({
-                    tooltip: { 
+                    backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff', // gray-800 en modo oscuro
+                    tooltip: {
                         position: 'top',
-                        formatter: function(params) {
+                        formatter: function (params) {
                             return params.name;
                         }
                     },
@@ -189,15 +199,16 @@
                                 shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         },
-                        data: heatmapData.map(function(item) {
+                        data: heatmapData.map(function (item) {
                             return [item.value[0], item.value[1], item.value[2]];
                         })
                     }]
                 });
 
-                // 4. Barras de ítems
-                var itemsChart = echarts.init(document.getElementById('items-bar'));
+                // 4. Barras de uso de ítems
+                var itemsChart = echarts.init(document.getElementById('items-bar'), currentTheme());
                 itemsChart.setOption({
+                    backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff', // gray-800 en modo oscuro
                     tooltip: { trigger: 'axis' },
                     legend: { data: ['Videos', 'Artículos', 'Ejercicios'] },
                     xAxis: {
@@ -213,8 +224,9 @@
                 });
 
                 // 6. Timeline de desbloqueos
-                var timelineChart = echarts.init(document.getElementById('timeline-unlocks'));
+                var timelineChart = echarts.init(document.getElementById('timeline-unlocks'), currentTheme());
                 timelineChart.setOption({
+                    backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff', // gray-800 en modo oscuro
                     tooltip: { trigger: 'axis' },
                     xAxis: {
                         type: 'category',
@@ -238,7 +250,7 @@
                 };
             }
 
-            // 3. Tabla con estrellas - Mejorado
+            // Función para cargar los datos de la tabla de quizzes
             function loadTableData() {
                 const quizData = [
                     { usuario: 'Usuario 1', quiz: 'Quiz Blockchain', puntaje: 95, estrellas: 5 },
@@ -246,29 +258,29 @@
                     { usuario: 'Usuario 3', quiz: 'Quiz DeFi', puntaje: 76, estrellas: 3 },
                     { usuario: 'Usuario 4', quiz: 'Quiz NFTs', puntaje: 92, estrellas: 4 }
                 ];
-                
+
                 const quizBody = document.getElementById('quiz-performance-body');
-                quizBody.innerHTML = ''; // Limpiar datos existentes
-                
+                quizBody.innerHTML = '';
+
                 quizData.forEach(q => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td class="px-4 py-2 text-black">${q.usuario}</td>
-                        <td class="px-4 py-2 text-black">${q.quiz}</td>
-                        <td class="px-4 py-2 text-black">${q.puntaje}%</td>
-                        <td class="px-4 py-2 text-black">${'⭐'.repeat(q.estrellas)} <span class="sr-only">${q.estrellas} estrellas</span></td>
+                        <td class="px-4 py-2 text-black dark:text-white">${q.usuario}</td>
+                        <td class="px-4 py-2 text-black dark:text-white">${q.quiz}</td>
+                        <td class="px-4 py-2 text-black dark:text-white">${q.puntaje}%</td>
+                        <td class="px-4 py-2 text-black dark:text-white">${'⭐'.repeat(q.estrellas)} <span class="sr-only">${q.estrellas} estrellas</span></td>
                     `;
                     quizBody.appendChild(row);
                 });
             }
 
             // Inicializar todo cuando el DOM esté listo
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 loadTableData();
                 initializeCharts();
-                
+
                 // Manejar redimensionamiento de ventana
-                window.addEventListener('resize', function() {
+                window.addEventListener('resize', function () {
                     for (const chartName in window.chartInstances) {
                         if (window.chartInstances.hasOwnProperty(chartName)) {
                             window.chartInstances[chartName].resize();

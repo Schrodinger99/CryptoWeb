@@ -28,10 +28,10 @@
                 </div>
                 <div class="flex items-center">
                     <div class="flex items-center ms-3">
-                      <a id="user-link" href="/detalles_usuario.html" class="flex items-center ms-4 px-6 py-3 rounded-lg text-base text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <img id="user-avatar" class="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
-                        <span id="user-nav-name" class="ms-4 text-base">Usuario</span>
-                      </a>
+                        <a id="user-link" href="/detalles_usuario.html" class="flex items-center ms-4 px-6 py-3 rounded-lg text-base text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            <img id="user-avatar" class="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+                            <span id="user-nav-name" class="ms-4 text-base">Usuario</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -99,17 +99,17 @@
             <div class="p-0 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-200 mt-14"></div>
         </div>
 </body>
-<script>
+    <script>
 
-  // Fetch user info
-  fetch('/api/userinfo')
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById('user-nav-name').textContent = data.name;
-      if (data.avatarUrl) {
-        document.getElementById('user-avatar').src = data.avatarUrl;
-      }
-    })
-    .catch(()=>{});
-</script>
+    // Fetch user info
+        fetch('/api/userinfo')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('user-nav-name').textContent = data.name;
+            if (data.avatarUrl) {
+                document.getElementById('user-avatar').src = data.avatarUrl;
+            }
+        })
+        .catch(()=>{});
+    </script>
 </html>

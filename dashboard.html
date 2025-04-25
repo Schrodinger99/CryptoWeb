@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Dashboard - CryptoChicks</title>
-    <link href="../public/css/output.css" rel="stylesheet">
+    <link href="css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
@@ -15,24 +15,29 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <body class="bg-gray-100 dark:bg-gray-900 flex">
-    <!-- Navbar cargado dinámicamente -->
+    
+  <!-- Navbar cargado dinámicamente -->
     <div id="navbar-placeholder"></div>
     <script>
-      fetch('/partials/navbar')  // Changed from '../partials/navbar' to '/partials/navbar'
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('navbar-placeholder').innerHTML = data;
+        fetch('/partials/navbar.html')
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Error al cargar la barra de navegación');
+            }
+            return res.text();
+        })
+        .then(html => { 
+            document.getElementById('navbar-placeholder').innerHTML = html 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('navbar-placeholder').innerHTML = '<div class="fixed w-16 h-screen bg-gray-800 text-white p-4">Error al cargar</div>';
         });
     </script>
-    <div class="fixed top-4 right-4">
-      <button id="theme-toggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
-        Toggle Theme
-      </button>
-    </div>
 
-    <!-- Content -->
+  <!-- Content -->
   <!-- Main -->
-    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
       <h1 class="text-3xl text-gray-900 dark:text-white font-bold mb-6">Dashboard</h1>
 
       <!-- Top Cards -->
@@ -85,11 +90,10 @@
         renderer: 'canvas',
         useDirtyRect: false
       });
-      var app = {};
-      var option;
-      option = {
+      var option = {
+        backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff', // gray-800 en modo oscuro
         title: {
-          text: 'Distribución de usuarios por nacionalidad ',
+          text: 'Distribución de usuarios por nacionalidad',
           left: 'center'
         },
         tooltip: {
@@ -104,11 +108,11 @@
             name: 'Accesos',
             type: 'pie',
             radius: '50%',
-            data: [,
+            data: [
               { value: 735, name: 'México' },
               { value: 580, name: 'Estados Unidos' },
               { value: 484, name: 'Europa' },
-              { value: 300, name: 'Sudamerica' }
+              { value: 300, name: 'Sudamérica' }
             ],
             emphasis: {
               itemStyle: {
@@ -120,17 +124,13 @@
           }
         ]
       };
+      myChart.setOption(option);
 
-      if (option && typeof option === 'object') {
-        myChart.setOption(option);
-      }
-
-      // Stacked Bar Chart
+      // Gráfico de barras apiladas
       var stackedChartDom = document.getElementById('stacked-bar-chart');
       var stackedChart = echarts.init(stackedChartDom, currentTheme());
-      var stackedOption;
-
-      stackedOption = {
+      var stackedOption = {
+        backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff', // gray-800 en modo oscuro
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -186,17 +186,16 @@
           }
         ]
       };
+      stackedChart.setOption(stackedOption);
 
-      if (stackedOption && typeof stackedOption === 'object') {
-        stackedChart.setOption(stackedOption);
-      }
-
-      // New Sorted Bar Chart
+      // Gráfico de barras ordenadas (Avance porcentual por Módulo)
       var chartDom = document.getElementById('main');
       var myChart = echarts.init(chartDom, currentTheme());
-      var option;
-
-      option = {
+      var option = {
+        backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff', // gray-800 en modo oscuro
+        tooltip: {
+          trigger: 'axis'
+        },
         dataset: [
           {
             dimensions: ['modulo', 'porcentaje'],
@@ -218,7 +217,12 @@
           type: 'category',
           axisLabel: { interval: 0 }
         },
-        yAxis: {},
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            formatter: '{value}%' // Agrega el símbolo de porcentaje al eje Y
+          }
+        },
         series: {
           type: 'bar',
           encode: { x: 'modulo', y: 'porcentaje' },
@@ -226,20 +230,19 @@
           showBackground: true,
           backgroundStyle: {
             color: 'rgba(180, 180, 180, 0.2)'
+          },
+          itemStyle: {
+            color: '#60a5fa' // Color de las barras
           }
         }
       };
+      myChart.setOption(option);
 
-      option && myChart.setOption(option);
-      window.addEventListener('resize', myChart.resize);
-      window.addEventListener('resize', stackedChart.resize);
-
-      // Quest Popularity Chart
+      // Gráfico de popularidad de quests
       var questChartDom = document.getElementById('quest-chart');
       var questChart = echarts.init(questChartDom, currentTheme());
-      var questOption;
-
-      questOption = {
+      var questOption = {
+        backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff', // gray-800 en modo oscuro
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -248,7 +251,7 @@
         },
         xAxis: {
           type: 'category',
-          data: ['Ahorcados', 'Memoramas', 'Leccion', 'ejemplo4']
+          data: ['Ahorcados', 'Memoramas', 'Lección', 'Ejemplo4']
         },
         yAxis: {
           type: 'value'
@@ -257,7 +260,7 @@
           {
             name: 'Completadas',
             type: 'bar',
-            data: [120, 200, 150, 80], // Datos simulados
+            data: [120, 200, 150, 80],
             label: {
               show: true,
               position: 'top'
@@ -268,12 +271,7 @@
           }
         ]
       };
-
-      if (questOption && typeof questOption === 'object') {
-        questChart.setOption(questOption);
-      }
-
-      window.addEventListener('resize', questChart.resize);
+      questChart.setOption(questOption);
     </script>
 
     </main>

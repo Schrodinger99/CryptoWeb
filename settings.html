@@ -3,25 +3,33 @@
     <head>
         <meta charset="UTF-8">
         <title>Settings - CryptoChicks</title>
-        <link href="../public/css/output.css" rel="stylesheet">
+        <link href="css/output.css" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <body class="bg-gray-100 dark:bg-gray-900 flex">
-        <!-- Navbar cargado dinámicamente -->
-        <div id="navbar-placeholder"></div>
-        <script>
-            fetch('../partials/navbar.html')
-            .then(response => response.text())
-            .then(data => {document.getElementById('navbar-placeholder').innerHTML = data;});
-        </script>
 
-    <!-- Content -->
+    <!-- Navbar cargado dinámicamente -->
+    <div id="navbar-placeholder"></div>
+    <script>
+        fetch('/partials/navbar.html')
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Error al cargar la barra de navegación');
+            }
+            return res.text();
+        })
+        .then(html => { 
+            document.getElementById('navbar-placeholder').innerHTML = html 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('navbar-placeholder').innerHTML = '<div class="fixed w-16 h-screen bg-gray-800 text-white p-4">Error al cargar</div>';
+        });
+    </script>
+
         <!-- Main -->
-        
-        
-
         <main class="flex-1 p-10 flex justify-center space-x-10 pt-20 pr-4 pb-4 pl-4">
             <!-- Create New User -->
             <form action="/register" method="POST" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-96">
