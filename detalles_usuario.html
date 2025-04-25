@@ -6,12 +6,25 @@
     <title>Detalles de Usuario - CryptoWeb</title>
     <link href="css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+      if (localStorage.getItem('theme') === 'dark' || 
+          (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex">
+<body class="bg-gray-100 dark:bg-gray-900 flex">
 
     <!-- Navbar cargado dinámicamente -->
     <div id="navbar-placeholder"></div>
+    <div class="fixed top-4 right-4">
+      <button id="toggle-dark" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 dark:bg-white dark:text-gray-800 dark:hover:bg-gray-300">
+        Modo Oscuro
+      </button>
+    </div>
     <script>
         fetch('/partials/navbar.html')
         .then(res => {
@@ -33,16 +46,16 @@
     <input type="file" id="avatar-input" accept="image/*" class="hidden">
     
     <!-- Main -->
-    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-20 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
-        <h1 class="text-3xl text-gray-800 font-bold mb-6">Detalles de Usuario</h1>
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
+        <h1 class="text-3xl text-gray-800 dark:text-white font-bold mb-6">Detalles de Usuario</h1>
 
         <!-- 1. Perfil de usuario -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
             <div class="flex items-center space-x-6">
                 <img id="detail-avatar" class="w-24 h-24 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Avatar Usuario">
                 <div>
-                    <h2 id="detail-name" class="text-xl font-semibold text-black">Nombre de Usuario</h2>
-                    <p id="detail-email" class="text-gray-600">email@dominio.com</p>
+                    <h2 id="detail-name" class="text-xl font-semibold text-black dark:text-white">Nombre de Usuario</h2>
+                    <p id="detail-email" class="text-gray-600 dark:text-gray-300">email@dominio.com</p>
                     <div class="mt-2 space-x-2">
                         <button id="change-photo" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Cambiar Foto</button>
                         <button id="edit-name" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Editar Nombre</button>
@@ -52,8 +65,8 @@
         </div>
 
         <!-- 2. Datos de cuenta -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Información de la cuenta</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Información de la cuenta</h2>
             <ul class="space-y-2">
                 <li><strong>Fecha de registro:</strong> <span id="detail-registered">01/01/2021</span></li>
                 <li><strong>Rol:</strong> <span id="detail-role">admin</span></li>
@@ -62,20 +75,20 @@
         </div>
 
         <!-- 3. Redes Sociales -->
-        <div class="bg-white rounded-lg shadow p-4 mb-6 border-2">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black">Redes Sociales</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
+            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Redes Sociales</h2>
             <div class="space-y-4">
                 <div class="flex items-center space-x-3">
                     <i class="fab fa-twitter text-xl" style="color:#1DA1F2;"></i>
-                    <input id="twitter" type="url" placeholder="https://twitter.com/usuario" class="w-full p-2 border rounded" />
+                    <input id="twitter" type="url" placeholder="https://twitter.com/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
                 </div>
                 <div class="flex items-center space-x-3">
                     <i class="fab fa-linkedin text-xl" style="color:#0077B5;"></i>
-                    <input id="linkedin" type="url" placeholder="https://linkedin.com/in/usuario" class="w-full p-2 border rounded" />
+                    <input id="linkedin" type="url" placeholder="https://linkedin.com/in/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
                 </div>
                 <div class="flex items-center space-x-3">
                     <i class="fab fa-github text-xl" style="color:#333;"></i>
-                    <input id="github" type="url" placeholder="https://github.com/usuario" class="w-full p-2 border rounded" />
+                    <input id="github" type="url" placeholder="https://github.com/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
                 </div>
             </div>
             <button id="save-social" class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Guardar Redes Sociales</button>
@@ -146,6 +159,17 @@
             }
           })
         });
+      });
+    </script>
+    <script>
+      document.getElementById('toggle-dark').addEventListener('click', () => {
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        }
       });
     </script>
     <script src="/js/flowbite.js"></script>
