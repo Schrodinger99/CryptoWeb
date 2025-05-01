@@ -39,14 +39,13 @@ function initChatbot() {
                 headers: getAuthHeaders(),
                 body: JSON.stringify({
                     message,
-                    modo: mode,
                     confirm: waitingForConfirmation
                 })
             });
 
             const data = await response.json();
 
-            if (mode === 'sql' && !waitingForConfirmation && data.query) {
+            if (!waitingForConfirmation && data.query) {
                 handleSQLConfirmation(data, message);
             } else {
                 handleRegularResponse(data);
