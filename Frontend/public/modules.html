@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modules - CryptoChicks</title>
+    <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com" data-tailwind-config='{"darkMode":"class"}'></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex">
+    <script>
+      // Prevent access if no token is present
+      if (!localStorage.getItem('token')) {
+        window.location.href = 'login.html';
+      }
+    </script>
+    <script type="module">
+      import { API_BASE, getAuthHeaders } from './javascript/api_url.mjs';
+      (async () => {
+        const res = await fetch(`${API_BASE}/check-auth`, { headers: getAuthHeaders() });
+        if (res.status !== 200) {
+          window.location.href = 'login.html';
+        }
+      })();
+    </script>
+    <!-- Navbar -->
+    <div id="navbar-placeholder"></div>
+    <script>
+        fetch('./partials/navbar.html')
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Error al cargar la barra de navegación');
+            }
+            return res.text();
+        })
+        .then(html => {
+            const container = document.getElementById('navbar-placeholder');
+            container.innerHTML = html;
+            // Attach logout listener
+            const logoutBtn = container.querySelector('#logout-btn');
+            if (logoutBtn) {
+              logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.href = 'logout.html';
+              });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('navbar-placeholder').innerHTML =
+                '<div class="fixed w-16 h-screen bg-gray-800 text-white p-4">Error al cargar</div>';
+        });
+    </script>
+    
+    <!-- Main content -->
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 px-4 w-full max-w-7xl mx-auto">
+        <h1 class="text-3xl text-gray-900 dark:text-white font-bold mb-6">Módulos de Aprendizaje</h1>
+
+        <!-- Error box -->
+        <div id="errorBox" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"></div>
+
+        <!-- Module Cards -->
+        <div id="modules-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div id="progress-chart" class="h-[400px]"></div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div id="questions-chart" class="h-[400px]"></div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="./javascript/modules.mjs"></script>
+</body>
+</html>

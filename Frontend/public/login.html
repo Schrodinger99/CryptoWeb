@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - CryptoChicks</title>
+  <link href="./css/output.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com" data-tailwind-config='{"darkMode":"class"}'></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center h-screen">
+  <div class="min-h-screen w-full flex items-center justify-center px-4">
+    <div class="w-full max-w-md space-y-8 rounded-xl bg-white dark:bg-gray-800 p-10 shadow-lg">
+      <div class="text-center">
+        <img src="/img/logogrande.png" alt="CryptoChicks Logo" class="mx-auto mb-5 w-32" />
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Iniciar Sesión</h2>
+      </div>
+      <form id="loginForm" class="mt-8 space-y-6">
+        <div>
+          <label for="username" class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Email</label>
+          <input id="username" type="email" required autocomplete="username"
+                 class="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+        </div>
+        <div>
+          <label for="password" class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Contraseña</label>
+          <input id="password" type="password" required autocomplete="current-password"
+                 class="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+        </div>
+        <div class="text-right">
+          <a href="/forgot-password.html" class="text-sm text-pink-500 hover:underline">¿Olvidaste tu contraseña?</a>
+        </div>
+        <div id="error-container"></div>
+        <button type="submit"
+                class="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { API_BASE } from './javascript/api_url.mjs';
+
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorContainer = document.getElementById('error-container');
+
+      try {
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login fallido');
+
+        localStorage.setItem('token', data.token);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        errorContainer.innerHTML = `
+          <p class="text-sm text-red-800 bg-red-100 p-2 rounded">${err.message}</p>
+        `;
+      }
+    });
+  </script>
+  <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
+</body>
+</html>
