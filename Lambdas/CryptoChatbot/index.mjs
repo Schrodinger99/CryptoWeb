@@ -227,7 +227,7 @@ export const handler = async (event) => {
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
-      response_format: 'json',
+      response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'Eres un generador de SQL que devuelve solo objetos JSON.' },
         { role: 'user', content: prompt }
@@ -250,7 +250,21 @@ export const handler = async (event) => {
       };
     }
 
-    const [result] = await connection.execute(query);
+    let result;
+    try {
+      [result] = await connection.execute(query);
+    } catch (sqlError) {
+      await connection.end();
+      console.error('SQL Error:', sqlError);
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({
+          error: sqlError.sqlMessage || 'Error al ejecutar la query',
+          query
+        })
+      };
+    }
     await connection.end();
 
     return {
