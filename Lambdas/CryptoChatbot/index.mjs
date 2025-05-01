@@ -21,7 +21,35 @@ export const handler = async (event) => {
       database: process.env.DB_NAME,
     });
 
+    // Obtener esquema de la base de datos para validación y sugerencias
+    const [schemaRows] = await connection.execute(
+      `SELECT TABLE_NAME, COLUMN_NAME 
+       FROM information_schema.COLUMNS 
+       WHERE TABLE_SCHEMA = ?`, 
+      [process.env.DB_NAME]
+    );
+    const schema = schemaRows.reduce((acc, {TABLE_NAME, COLUMN_NAME}) => {
+      if (!acc[TABLE_NAME]) acc[TABLE_NAME] = new Set();
+      acc[TABLE_NAME].add(COLUMN_NAME);
+      return acc;
+    }, {});
+
     if (modo === 'consulta') {
+      // Si el usuario menciona exactamente el nombre de una tabla, mostrar sus primeras filas
+      if (schema[userMessage.trim()]) {
+        const table = userMessage.trim();
+        const [rows] = await connection.execute(`SELECT * FROM \`${table}\` LIMIT 10`);
+        await connection.end();
+        return {
+          statusCode: 200,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({
+            response: rows,
+            message: `Primeras filas de la tabla ${table}`
+          })
+        };
+      }
+
       let resumen = '';
       let rows = [];
 
@@ -59,28 +87,21 @@ export const handler = async (event) => {
         resumen = rows.map(r => `Quiz "${r.nombre_quiz}" con promedio de ${Math.round(r.promedio_puntos)} puntos`).join('\n');
 
       } else if (/preguntas?/i.test(userMessage)) {
+        // Promedio de intentos por pregunta
         [rows] = await connection.execute(`
-          SELECT pregunta, AVG(estrellas) as promedio_estrellas
+          SELECT Preguntas.explicacion AS pregunta, AVG(Usuario_Pregunta.intentos) AS promedio_intentos
           FROM Usuario_Pregunta
           JOIN Preguntas USING(id_pregunta)
-          GROUP BY pregunta
-          ORDER BY promedio_estrellas ASC
+          GROUP BY Preguntas.explicacion
+          ORDER BY promedio_intentos ASC
           LIMIT 5;
         `);
-        resumen = rows.map(r => `Pregunta: "${r.pregunta}" con ${Math.round(r.promedio_estrellas)} estrellas`).join('\n');
-
+        resumen = rows
+          .map(r => `Pregunta: "${r.pregunta}" con promedio de ${Math.round(r.promedio_intentos)} intentos`)
+          .join('\n');
       } else if (/quests?/i.test(userMessage)) {
-        [rows] = await connection.execute(`
-          SELECT descrip_quest, COUNT(*) as completados
-          FROM Usuario_quest
-          JOIN Quests USING(id_quest)
-          WHERE completado = 1
-          GROUP BY descrip_quest
-          ORDER BY completados DESC
-          LIMIT 5;
-        `);
-        resumen = rows.map(r => `Quest "${r.descrip_quest}" completada por ${r.completados} usuarios`).join('\n');
-
+        // Quests no implementadas en el esquema de base de datos actual
+        resumen = "Funcionalidad de quests no disponible en este momento.";
       } else if (/items?/i.test(userMessage)) {
         [rows] = await connection.execute(`
           SELECT descrip_item, SUM(cantidad) as total_usado
@@ -123,17 +144,18 @@ export const handler = async (event) => {
 
       // --- NUEVAS CONSULTAS COMPLEJAS ---
       } else if (/falladas|difíciles|errores/i.test(userMessage)) {
+        // Preguntas con mayor promedio de intentos, consideradas difíciles
         [rows] = await connection.execute(`
-          SELECT pregunta, AVG(estrellas) as promedio_estrellas, COUNT(*) as veces
+          SELECT Preguntas.explicacion AS pregunta, AVG(Usuario_Pregunta.intentos) AS promedio_intentos, COUNT(*) AS veces
           FROM Usuario_Pregunta
           JOIN Preguntas USING(id_pregunta)
-          GROUP BY pregunta
-          HAVING promedio_estrellas < 2
-          ORDER BY promedio_estrellas ASC, veces DESC
+          GROUP BY Preguntas.explicacion
+          ORDER BY promedio_intentos DESC, veces DESC
           LIMIT 5;
         `);
-        resumen = rows.map(r => `Pregunta difícil: "\${r.pregunta}" (⭐️\${r.promedio_estrellas.toFixed(1)}, intentos: \${r.veces})`).join('\n');
-
+        resumen = rows
+          .map(r => `Pregunta difícil: "${r.pregunta}" (promedio intentos: ${r.promedio_intentos.toFixed(1)}, veces respondida: ${r.veces})`)
+          .join('\n');
       } else if (/progreso.*pa[ií]s|nacionalidad/i.test(userMessage)) {
         [rows] = await connection.execute(`
           SELECT nacionalidad, AVG(porce_complet) as promedio
@@ -143,7 +165,7 @@ export const handler = async (event) => {
           ORDER BY promedio DESC
           LIMIT 5;
         `);
-        resumen = rows.map(r => `\${r.nacionalidad}: \${Math.round(r.promedio)}% promedio de progreso`).join('\n');
+        resumen = rows.map(r => `${r.nacionalidad}: ${Math.round(r.promedio)}% promedio de progreso`).join('\n');
 
       } else if (/sin progreso|no han iniciado/i.test(userMessage)) {
         [rows] = await connection.execute(`
@@ -154,21 +176,11 @@ export const handler = async (event) => {
           )
           LIMIT 5;
         `);
-        resumen = rows.map(r => `Usuario sin progreso: \${r.nombre_user}`).join('\n');
+        resumen = rows.map(r => `Usuario sin progreso: ${r.nombre_user}`).join('\n');
 
       } else if (/quests?.*(reclamadas|completadas)/i.test(userMessage)) {
-        [rows] = await connection.execute(`
-          SELECT descrip_quest,
-                 SUM(completado) as completadas,
-                 SUM(reclamado) as reclamadas
-          FROM Usuario_quest
-          JOIN Quests USING(id_quest)
-          GROUP BY descrip_quest
-          ORDER BY completadas DESC
-          LIMIT 5;
-        `);
-        resumen = rows.map(r => `Quest "\${r.descrip_quest}": \${r.completadas} completadas, \${r.reclamadas} reclamadas`).join('\n');
-
+        // Quests no implementadas en el esquema de base de datos actual
+        resumen = "Funcionalidad de quests no disponible en este momento.";
       } else if (/duraci[oó]n.*contenido/i.test(userMessage)) {
         [rows] = await connection.execute(`
           SELECT id_quiz, ROUND(AVG(duracion),1) as promedio_duracion, COUNT(*) as total
@@ -177,7 +189,7 @@ export const handler = async (event) => {
           ORDER BY promedio_duracion DESC
           LIMIT 5;
         `);
-        resumen = rows.map(r => `Quiz \${r.id_quiz}: duración promedio \${r.promedio_duracion} segundos (\${r.total} contenidos)`).join('\n');
+        resumen = rows.map(r => `Quiz ${r.id_quiz}: duración promedio ${r.promedio_duracion} segundos (${r.total} contenidos)`).join('\n');
 
       } else {
         await connection.end();
@@ -218,9 +230,26 @@ export const handler = async (event) => {
     }
 
     // modo === 'sql'
+    // Si el usuario menciona exactamente el nombre de una tabla, mostrar sus primeras filas
+    if (schema[userMessage.trim()]) {
+      const table = userMessage.trim();
+      const [rows] = await connection.execute(`SELECT * FROM \`${table}\` LIMIT 10`);
+      await connection.end();
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({
+          response: rows,
+          message: `Primeras filas de la tabla ${table}`
+        })
+      };
+    }
+
     const prompt = `
       Interpreta esta instrucción en lenguaje natural: "${userMessage}".
-      Genera una única query SQL. NO la expliques.
+      Genera una única query SQL usando las tablas y columnas disponibles:
+      ${Object.entries(schema).map(([t, cols]) => `${t}(${[...cols].join(',')})`).join('; ')}.
+      NO la expliques.
       Si la query afecta datos de tablas como ${TABLAS_SENSIBLES.join(', ')}, añade un disclaimer que indique que puede afectar a usuarios directamente.
       Responde en JSON estricto con los campos: query, disclaimer (si aplica).
     `;
@@ -237,15 +266,49 @@ export const handler = async (event) => {
     const json = JSON.parse(completion.choices[0].message.content || '{}');
     const { query, disclaimer } = json;
 
+    // Validar que todas las tablas y columnas en la query existen en el esquema
+    const identifierRegex = /\bFROM\s+`?(\w+)`?|\bJOIN\s+`?(\w+)`?|\bSELECT\s+([\w\.]+)/gi;
+    let match;
+    while ((match = identifierRegex.exec(query))) {
+      const table = match[1] || match[2];
+      const colPart = match[3];
+      if (table && !schema[table]) throw new Error(`Tabla no existe: ${table}`);
+      if (colPart) {
+        const [tbl, col] = colPart.split('.');
+        if (col && schema[tbl] && !schema[tbl].has(col)) {
+          throw new Error(`Columna no existe: ${col} en tabla ${tbl}`);
+        }
+      }
+    }
+
+    const naturalPrompt = `
+      El usuario dijo: "${userMessage}".
+      Explica en lenguaje natural lo que hace esta query SQL:
+      ${query}
+      Devuelve solo el campo 'explicacion' en formato JSON.
+    `;
+
+    const explanationCompletion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: 'Eres un explicador de queries SQL en español. Devuelve solo JSON.' },
+        { role: 'user', content: naturalPrompt }
+      ]
+    });
+
+    const naturalJson = JSON.parse(explanationCompletion.choices[0].message.content || '{}');
+    const { explicacion } = naturalJson;
+
     if (!confirm) {
       await connection.end();
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({
-          message: '¿Deseas ejecutar esta query?',
-          query,
-          disclaimer: disclaimer || null
+          message: explicacion || 'Se ha generado una consulta SQL.',
+          disclaimer: disclaimer || null,
+          confirm_required: !query.trim().toUpperCase().startsWith('SELECT')
         })
       };
     }
