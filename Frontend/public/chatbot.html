@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cripty - CryptoChicks</title>
+    <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com" data-tailwind-config='{"darkMode":"class"}'></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex">
+    <script>
+      // Prevent access if no token is present
+      if (!localStorage.getItem('token')) {
+        window.location.href = 'login.html';
+      }
+    </script>
+    <script type="module">
+      import { API_BASE, getAuthHeaders } from './javascript/api_url.mjs';
+      (async () => {
+        const res = await fetch(`${API_BASE}/check-auth`, { headers: getAuthHeaders() });
+        if (res.status !== 200) {
+          window.location.href = 'login.html';
+        }
+      })();
+    </script>
+
+    <!-- Navbar cargado dinámicamente -->
+    <div id="navbar-placeholder"></div>
+    <script>
+      fetch('./partials/navbar.html')
+        .then(res => res.ok ? res.text() : Promise.reject('Error al cargar navbar'))
+        .then(html => {
+          const container = document.getElementById('navbar-placeholder');
+          container.innerHTML = html;
+          const logoutBtn = container.querySelector('#logout-btn');
+          if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+              localStorage.removeItem('token');
+              window.location.href = 'logout.html';
+            });
+          }
+        })
+        .catch(() => {
+          document.getElementById('navbar-placeholder').innerHTML =
+            '<div class="fixed w-16 h-screen bg-gray-800 text-white p-4">Error al cargar</div>';
+        });
+    </script>
+
+    <!-- Main content -->
+    <main class="ml-16 flex-1 h-screen flex flex-col">
+        <!-- Header con selector de modo -->
+        <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+            <div class="max-w-3xl mx-auto flex items-center justify-between">
+                <h1 class="text-xl text-gray-900 dark:text-white font-bold">Cripty</h1>
+                <select id="mode-selector" class="bg-gray-100 dark:bg-gray-700 border-0 rounded-md px-3 py-2 text-sm">
+                    <option value="consulta">Modo Consulta</option>
+                    <option value="sql">Modo SQL</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Chat messages -->
+        <div class="flex-1 overflow-y-auto">
+            <div id="chat-messages" class="max-w-3xl mx-auto py-4 space-y-6">
+                <!-- Los mensajes se insertarán aquí dinámicamente -->
+                <div class="bg-blue-50 dark:bg-gray-700/50 p-6">
+                    <div class="max-w-3xl mx-auto">
+                        <p class="text-gray-700 dark:text-gray-300">
+                            ¡Hola! Soy Cripty, tu asistente de datos. Puedo ayudarte a analizar información sobre usuarios, 
+                            módulos, quizzes y más. ¿Qué te gustaría saber?
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+            <div class="max-w-3xl mx-auto">
+                <div class="flex gap-2 items-center">
+                    <input type="text" 
+                           id="message-input" 
+                           class="flex-1 p-3 bg-gray-100 dark:bg-gray-700 border-0 rounded-md focus:ring-2 focus:ring-blue-500 dark:text-white" 
+                           placeholder="Escribe tu mensaje...">
+                    <button id="send-button" 
+                            class="p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
+                    Modo actual: <span id="current-mode">Consulta</span>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
+    <script type="module" src="./javascript/chatbot.mjs"></script>
+</body>
+</html>
