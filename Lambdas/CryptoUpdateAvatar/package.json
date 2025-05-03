@@ -1,0 +1,18 @@
+{
+  "name": "cryptoupdateavatar",
+  "version": "1.0.0",
+  "main": "authUtils.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.802.0",
+    "busboy": "^1.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.1"
+  }
+}

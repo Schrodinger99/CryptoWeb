@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Dashboard - CryptoChicks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link href="/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com" data-tailwind-config='{"darkMode":"class"}'></script>
@@ -49,34 +50,38 @@
     </script>
 
     <!-- Main content -->
-    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 px-4 w-full max-w-5xl mx-auto">
-      <h1 class="text-3xl text-gray-900 dark:text-white font-bold mb-6">Dashboard</h1>
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 px-4 w-full max-w-7xl mx-auto">
+      <div class="max-w-7xl mx-auto space-y-6">
+        <!-- Responsive grid for cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Cards with responsive text -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <h3 class="text-base sm:text-lg text-gray-900 dark:text-white font-semibold">Total Registered Users</h3>
+            <p id="totalUsuarios" class="text-xl sm:text-2xl text-gray-900 dark:text-white font-bold">—</p>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Quests completed today</h3>
+            <p id="questsCompleted" class="text-2xl text-gray-900 dark:text-white font-bold">—</p>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Weekly retention rate</h3>
+            <p id="weeklyRetention" class="text-2xl text-gray-900 dark:text-white font-bold">—</p>
+          </div>
+        </div>
 
-      <!-- Top Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-          <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Total de usuarios registrados</h3>
-          <p id="totalUsuarios" class="text-2xl text-gray-900 dark:text-white font-bold" >—</p>
+        <!-- Responsive charts grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div class="h-[300px] sm:h-[400px]">
+              <div id="nationality-chart" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div class="h-[300px] sm:h-[400px]">
+              <div id="main" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>c
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-          <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Quests completadas hoy</h3>
-          <p class="text-2xl text-gray-900 dark:text-white font-bold">128</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-          <h3 class="text-lg text-gray-900 dark:text-white font-semibold">Tasa de retención semanal</h3>
-          <p class="text-2xl text-gray-900 dark:text-white font-bold">73%</p>
-        </div>
-      </div>
-
-      <!-- Charts -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-        <div id="nationality-chart" style="width: 100%; height: 400px;"></div>
-      </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-        <div id="main" style="width: 100%; height: 400px;"></div>
-      </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-        <div id="quest-chart" style="width: 100%; height: 400px;"></div>
       </div>
 
       <!-- Error box -->

@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Detalles de Usuario - CryptoWeb</title>
     <link href="css/output.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
       if (localStorage.getItem('theme') === 'dark' ||
           (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -20,11 +19,6 @@
 
     <!-- Navbar cargado dinámicamente -->
     <div id="navbar-placeholder"></div>
-    <div class="fixed top-4 right-4">
-      <button id="toggle-dark" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 dark:bg-white dark:text-gray-800 dark:hover:bg-gray-300">
-        Modo Oscuro
-      </button>
-    </div>
     <script>
         fetch('/partials/navbar.html')
         .then(res => {
@@ -46,136 +40,151 @@
     <input type="file" id="avatar-input" accept="image/*" class="hidden">
 
     <!-- Main -->
-    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
-        <h1 class="text-3xl text-gray-800 dark:text-white font-bold mb-6">Detalles de Usuario</h1>
-
-        <!-- 1. Perfil de usuario -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
-            <div class="flex items-center space-x-6">
-                <img id="detail-avatar" class="w-24 h-24 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Avatar Usuario">
-                <div>
-                    <h2 id="detail-name" class="text-xl font-semibold text-black dark:text-white">Nombre de Usuario</h2>
-                    <p id="detail-email" class="text-gray-600 dark:text-gray-300">email@dominio.com</p>
-                    <div class="mt-2 space-x-2">
-                        <button id="change-photo" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Cambiar Foto</button>
-                        <button id="edit-name" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Editar Nombre</button>
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-24 px-4 w-full max-w-7xl mx-auto">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-800 dark:text-white">User Details</h1>
+            
+            <!-- Profile sections -->
+            <div class="space-y-4 sm:space-y-6">
+                <!-- 1. Perfil de usuario -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center space-x-6">
+                        <img id="detail-avatar" class="w-24 h-24 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Avatar Usuario">
+                        <div>
+                            <h2 id="detail-name" class="text-xl font-semibold text-black dark:text-white">Username</h2>
+                            <p id="detail-email" class="text-gray-600 dark:text-gray-300">Email</p>
+                            <div class="mt-2 space-x-2">
+                                <button id="change-photo" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Change photo</button>
+                                <button id="edit-name" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Change name</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- 2. Datos de cuenta -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Información de la cuenta</h2>
-            <ul class="space-y-2">
-                <li><strong>Fecha de registro:</strong> <span id="detail-registered">01/01/2021</span></li>
-                <li><strong>Rol:</strong> <span id="detail-role">admin</span></li>
-                <li><strong>Último ingreso:</strong> <span id="detail-last-login">2025-04-22 15:30</span></li>
-            </ul>
-        </div>
+                <!-- 2. Datos de cuenta -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
+                    <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Accont information</h2>
+                    <ul class="space-y-2">
+                        <li><strong>Record date: </strong> <span id="detail-registered">01/01/2021</span></li>
+                        <li><strong>Rol: </strong> <span id="detail-role">admin</span></li>
+                    </ul>
+                </div>
 
-        <!-- 3. Redes Sociales -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
-            <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Redes Sociales</h2>
-            <div class="space-y-4">
-                <div class="flex items-center space-x-3">
-                    <i class="fab fa-twitter text-xl" style="color:#1DA1F2;"></i>
-                    <input id="twitter" type="url" placeholder="https://twitter.com/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
-                </div>
-                <div class="flex items-center space-x-3">
-                    <i class="fab fa-linkedin text-xl" style="color:#0077B5;"></i>
-                    <input id="linkedin" type="url" placeholder="https://linkedin.com/in/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
-                </div>
-                <div class="flex items-center space-x-3">
-                    <i class="fab fa-github text-xl" style="color:#333;"></i>
-                    <input id="github" type="url" placeholder="https://github.com/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
+                <!-- 3. Redes Sociales -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6 border-2 border-gray-200 dark:border-gray-800">
+                    <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Social Media</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-twitter text-xl" style="color:#1DA1F2;"></i>
+                            <input id="twitter" type="url" placeholder="https://twitter.com/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-linkedin text-xl" style="color:#0077B5;"></i>
+                            <input id="linkedin" type="url" placeholder="https://linkedin.com/in/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-github text-xl" style="color:#333;"></i>
+                            <input id="github" type="url" placeholder="https://github.com/usuario" class="w-full p-2 border rounded bg-white dark:bg-gray-700 dark:text-white" />
+                        </div>
+                    </div>
+                    <button id="save-social" class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Social Medial</button>
                 </div>
             </div>
-            <button id="save-social" class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Guardar Redes Sociales</button>
         </div>
     </main>
 
-    <script>
+    <script type="module">
+    import { API_BASE, getAuthHeaders } from './javascript/api_url.mjs';
+    // Función para cargar la información del usuario
     (async function loadProfile() {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        window.location.href = '/index.html';
-        return;
-      }
-      try {
-        const res = await fetch('https://{TU_API_ID}.execute-api.us-east-1.amazonaws.com/api/userinfo', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error('Error loading user info');
-        const data = await res.json();
-        // Populate profile fields
-        document.getElementById('detail-name').textContent = data.nombre_user;
-        document.getElementById('detail-email').textContent = data.correo;
-        if (data.avatar_url) document.getElementById('detail-avatar').src = data.avatar_url;
-        document.getElementById('detail-registered').textContent = data.fecha_registro || 'N/A';
-        document.getElementById('detail-role').textContent = data.analyst ? 'Analyst' : 'User';
-        document.getElementById('detail-last-login').textContent = data.last_login || 'N/A';
-        // Populate social inputs
-        document.getElementById('twitter').value = data.twitter || '';
-        document.getElementById('linkedin').value = data.linkedin || '';
-        document.getElementById('github').value = data.github || '';
-      } catch (err) {
-        console.error(err);
-      }
-    })();
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/index.html';
+            return;
+        }
+        
+        try {
+            const res = await fetch(`${API_BASE}/user-info`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Error loading user info');
+            const data = await res.json();
 
+            // Actualizar los campos con la información del usuario
+            document.getElementById('detail-name').textContent = data.username;
+            document.getElementById('detail-email').textContent = data.email;
+            if (data.avatar_url) document.getElementById('detail-avatar').src = data.avatar_url;
+            document.getElementById('detail-registered').textContent = data.fecha_registro || 'N/A';
+            document.getElementById('detail-role').textContent = data.rol || 'Admin';
+
+            // Redes sociales
+            document.getElementById('twitter').value = data.twitter || '';
+            document.getElementById('linkedin').value = data.linkedin || '';
+            document.getElementById('github').value = data.github || '';
+
+        } catch (err) {
+            console.error(err);
+        }
+    })();
+    </script>
+
+    <script type="module">
+    import { API_BASE } from './javascript/api_url.mjs';
     // Avatar upload
     const avatarInput = document.getElementById('avatar-input');
     document.getElementById('change-photo').addEventListener('click', () => avatarInput.click());
-    avatarInput.addEventListener('change', async function() {
-      const file = this.files[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append('avatar', file);
-        const token = localStorage.getItem('token');
-        await fetch('https://{TU_API_ID}.execute-api.us-east-1.amazonaws.com/api/userinfo', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          body: formData
-        });
-        document.getElementById('detail-avatar').src = URL.createObjectURL(file);
-      }
+    avatarInput.addEventListener('change', async function () {
+        const file = this.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('avatar', file);
+            const token = localStorage.getItem('token');
+
+            await fetch(`${API_BASE}/update-avatar`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+
+            // Actualizar la imagen de perfil
+            document.getElementById('detail-avatar').src = URL.createObjectURL(file);
+        }
     });
 
     // Edit name
     document.getElementById('edit-name').addEventListener('click', async () => {
-      const newName = prompt('Ingrese su nuevo nombre de usuario:', document.getElementById('detail-name').textContent);
-      if (newName) {
-        const token = localStorage.getItem('token');
-        await fetch('https://{TU_API_ID}.execute-api.us-east-1.amazonaws.com/api/userinfo', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ name: newName })
-        });
-        document.getElementById('detail-name').textContent = newName;
-      }
+        const newName = prompt('Ingrese su nuevo nombre de usuario:', document.getElementById('detail-name').textContent);
+        if (newName) {
+            const token = localStorage.getItem('token');
+            await fetch(`${API_BASE}/update-user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ username: newName })
+            });
+            document.getElementById('detail-name').textContent = newName;
+        }
     });
 
     // Save social links
     document.getElementById('save-social').addEventListener('click', async () => {
-      const token = localStorage.getItem('token');
-      const body = {
-        twitter: document.getElementById('twitter').value.trim(),
-        linkedin: document.getElementById('linkedin').value.trim(),
-        github: document.getElementById('github').value.trim()
-      };
-      await fetch('https://{TU_API_ID}.execute-api.us-east-1.amazonaws.com/api/userinfo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(body)
-      });
-      alert('Datos de perfil actualizados');
+        const token = localStorage.getItem('token');
+        const body = {
+            twitter: document.getElementById('twitter').value.trim(),
+            linkedin: document.getElementById('linkedin').value.trim(),
+            github: document.getElementById('github').value.trim()
+        };
+        await fetch(`${API_BASE}/update-user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        });
+        alert('Datos de perfil actualizados');
     });
   </script>
     <script>

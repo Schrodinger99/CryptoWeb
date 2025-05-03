@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Modules - CryptoChicks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link href="/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com" data-tailwind-config='{"darkMode":"class"}'></script>
@@ -55,23 +56,13 @@
     
     <!-- Main content -->
     <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 px-4 w-full max-w-7xl mx-auto">
-        <h1 class="text-3xl text-gray-900 dark:text-white font-bold mb-6">Módulos de Aprendizaje</h1>
+        <h1 class="text-3xl text-gray-900 dark:text-white font-bold mb-6">Modules</h1>
 
         <!-- Error box -->
         <div id="errorBox" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"></div>
 
         <!-- Module Cards -->
         <div id="modules-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
-
-        <!-- Charts -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <div id="progress-chart" class="h-[400px]"></div>
-            </div>
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <div id="questions-chart" class="h-[400px]"></div>
-            </div>
-        </div>
     </main>
 
     <script type="module" src="./javascript/modules.mjs"></script>

@@ -36,6 +36,32 @@ app.get('/usuarios/count', async (req, res) => {
   }
 });
 
+app.get('/usuarios/quest', async (req, res) => {
+  let connection;
+  try {
+    connection = await db.connect();
+    const data = await db.getQuestCompleted(connection);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.end();
+  }
+});
+
+app.get('/usuarios/weekly', async (req, res) => {
+  let connection;
+  try {
+    connection = await db.connect();
+    const data = await db.getWeeklyRetention(connection);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.end();
+  }
+});
+
 // Usuarios por nacionalidad
 app.get('/usuarios/nacionalidad', async (req, res) => {
   let connection;
@@ -72,79 +98,6 @@ app.get('/juegos/resueltos', async (req, res) => {
     const data = await db.getUsuariosResueltosPorJuego(connection);
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  } finally {
-    if (connection) await connection.end();
-  }
-});
-
-// ==============================================
-// ================== Settings ==================
-// ==============================================
-
-// Crear nuevo usuario
-app.post('/usuarios/admin', async (req, res) => {
-  let connection;
-  try {
-    const { username, email, role, password } = req.body;
-
-    // Validaciones básicas
-    if (!username || !email || !role || !password) {
-      return res.status(400).json({
-        error: 'Todos los campos son requeridos'
-      });
-    }
-
-    connection = await db.connect();
-
-    // Verificar si ya existe
-    const exists = await db.getUsuarioPorCorreo(connection, email);
-    if (exists) {
-      return res.status(409).json({
-        error: 'Ya existe un usuario con ese correo'
-      });
-    }
-
-    // Crear usuario
-    await db.createUsuario(connection, {
-      username,
-      email,
-      role,
-      password
-    });
-
-    res.status(201).json({
-      message: 'Usuario creado exitosamente'
-    });
-  } catch (err) {
-    console.error('Error creating user:', err);
-    res.status(500).json({ error: err.message });
-  } finally {
-    if (connection) await connection.end();
-  }
-});
-
-// Eliminación de usuario por correo
-app.delete('/usuarios/admin/:correo', async (req, res) => {
-  let connection;
-  try {
-    const { correo } = req.params;
-    connection = await db.connect();
-
-    const deleted = await db.deleteUsuarioPorCorreo(connection, correo);
-
-    if (!deleted) {
-      return res.status(404).json({
-        message: 'Usuario no encontrado'
-      });
-    }
-
-    res.json({
-      message: 'Usuario eliminado exitosamente'
-    });
-
-  } catch (err) {
-    console.error('Error eliminando usuario:', err);
     res.status(500).json({ error: err.message });
   } finally {
     if (connection) await connection.end();

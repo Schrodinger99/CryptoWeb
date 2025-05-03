@@ -1,117 +1,77 @@
-import { API_BASE, DATA_URL, getAuthHeaders } from './api_url.mjs';
-
-// Ensure user is authenticated
-(async () => {
-  const res = await fetch(`${API_BASE}/check-auth`, { headers: getAuthHeaders() });
-  if (res.status !== 200) {
-    window.location.href = 'login.html';
-  }
-})();
-
-async function fetchWithCheck(url, options = {}) {
-  const response = await fetch(url, { 
-    headers: { ...getAuthHeaders(), ...(options.headers || {}) },
-    method: options.method || 'GET',
-    body: options.body || null
-  });
-  if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
-    throw new Error(data.error || `HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-}
+import { API_BASE, getAuthHeaders } from './api_url.mjs';
 
 document.addEventListener('DOMContentLoaded', initSettings);
 
-function initSettings() {
-  const createUserForm = document.getElementById('createUserForm');
-  const deleteUserForm = document.getElementById('deleteUserForm');
-  const createButton = createUserForm.querySelector('button[type="submit"]');
-  const deleteButton = deleteUserForm.querySelector('button[type="submit"]');
+async function initSettings() {
+  try {
+    // Verifica si el token es válido antes de mostrar el contenido
+    const res = await fetch(`${API_BASE}/check-auth`, {
+      headers: getAuthHeaders()
+    });
 
-  // Crear Usuario
-  createUserForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(createUserForm);
-    const payload = {
-      username: formData.get('username').trim(),
-      email: formData.get('email').trim(),
-      role: formData.get('role'),
-      password: formData.get('password').trim()
-    };
-
-    // Validación básica
-    if (!payload.email || !payload.email.includes('@')) {
-      showStatus('Por favor ingresa un email válido', 'error');
+    const data = await res.json();
+    
+    if (res.status !== 200 || data.rol !== 'Admin') {
+      // Si no es Admin, redirigir a login
+      window.location.href = 'login.html';
       return;
     }
 
-    try {
-      createButton.disabled = true;
-      createButton.innerHTML = 'Creando...';
-
-      // Remover verificaciones de token
-      const data = await fetchWithCheck(`${DATA_URL}/usuarios/admin`, {
-          method: 'POST',
-          body: JSON.stringify(payload)
+    // Aquí sigue el código para manejar los formularios de creación y eliminación de usuarios
+    const createUserForm = document.getElementById('createUserForm');
+    createUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(createUserForm);
+      const userData = {
+        email: formData.get('email'),
+        password: formData.get('password'),
+        username: formData.get('username'),
+        rol: formData.get('role')
+      };
+      
+      const res = await fetch(`${API_BASE}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
+        body: JSON.stringify(userData)
       });
 
-      showStatus('Usuario creado exitosamente', 'success');
-      createUserForm.reset();
+      const data = await res.json();
+      if (res.status === 201) {
+        alert('Usuario creado correctamente');
+      } else {
+        alert('Error al crear el usuario');
+      }
+    });
 
-    } catch (err) {
-      console.error('Error:', err);
-      showStatus(err.message || 'Error al crear usuario', 'error');
-    } finally {
-      createButton.disabled = false;
-      createButton.innerHTML = 'Crear Usuario';
-    }
-  });
+    // Eliminar Usuario
+    const deleteUserForm = document.getElementById('deleteUserForm');
+    deleteUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(deleteUserForm);
+      const emailToDelete = formData.get('email');
 
-  // Eliminar Usuario
-  deleteUserForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = new FormData(deleteUserForm).get('email').trim();
-
-    // Validación básica del email
-    if (!email || !email.includes('@')) {
-      showStatus('Por favor ingresa un email válido', 'error');
-      return;
-    }
-
-    try {
-      deleteButton.disabled = true;
-      deleteButton.innerHTML = 'Eliminando...';
-
-      const data = await fetchWithCheck(`${DATA_URL}/usuarios/admin/${email}`, {
-        method: 'DELETE'
+      const res = await fetch(`${API_BASE}/delete-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
+        body: JSON.stringify({ email: emailToDelete })
       });
 
-      showStatus('Usuario eliminado exitosamente', 'success');
-      deleteUserForm.reset();
+      const data = await res.json();
+      if (res.status === 200) {
+        alert('Usuario eliminado correctamente');
+      } else {
+        alert('Error al eliminar el usuario');
+      }
+    });
 
-    } catch (err) {
-      console.error('Error:', err);
-      showStatus(err.message || 'Error al eliminar usuario', 'error');
-    } finally {
-      deleteButton.disabled = false;
-      deleteButton.innerHTML = 'Eliminar Usuario';
-    }
-  });
-}
-
-function showStatus(message, type = 'success') {
-  const statusMessage = document.getElementById('statusMessage');
-  if (statusMessage) {
-    statusMessage.textContent = message;
-    statusMessage.className = `alert alert-${type} mb-4`;
-    statusMessage.style.display = 'block';
-
-    // Auto-ocultar después de 3 segundos
-    setTimeout(() => {
-      statusMessage.style.display = 'none';
-    }, 3000);
-  } else {
-    alert(message);
+  } catch (err) {
+    console.error('Error al cargar los datos:', err);
+    window.location.href = 'login.html';
   }
 }

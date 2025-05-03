@@ -20,6 +20,18 @@ async function getConteoUsuarios(connection) {
   return rows[0].total;       // ← Un número entero
 }
 
+async function getQuestCompleted(connection) {
+  const sql = 'CALL getQuestCompleted ';
+  const [rows] = await connection.execute(sql);
+  return rows;
+}
+
+async function getWeeklyRetention(connection) {
+  const sql = 'CALL getWeeklyRetention';
+  const [rows] = await connection.execute(sql);
+  return rows;
+}
+
 // Devuelve un arreglo de objetos { nacionalidad, total }
 async function getUsuariosPorNacionalidad(connection) {
   const sql = `
@@ -90,39 +102,6 @@ async function getHistorialDesbloqueos(connection, dias = 30) {
 }
 
 // ==============================================
-// ================== Settings ==================
-// ==============================================
-
-async function createUsuario(connection, userData) {
-  const { username, email, role, password } = userData;
-  const sql = `
-    INSERT INTO UsuariosAdmin (username, email, rol, contrasena_hash)
-    VALUES (?, ?, ?, ?)
-  `;
-  const [result] = await connection.execute(sql, [
-    username,
-    email,
-    role,
-    password
-  ]);
-  return result.insertId;
-}
-
-// Eliminar usuario por correo
-async function deleteUsuarioPorCorreo(connection, email) {
-  const sql = 'DELETE FROM UsuariosAdmin WHERE email = ?';
-  const [result] = await connection.execute(sql, [email]);
-  return result.affectedRows > 0;
-}
-
-// busca usario por correo
-async function getUsuarioPorCorreo(connection, email) {
-  const sql = 'SELECT id_usuario_admin FROM UsuariosAdmin WHERE email = ?';
-  const [rows] = await connection.execute(sql, [email]);
-  return rows.length > 0;
-}
-
-// ==============================================
 // ================== Modules ==================
 // ==============================================
 
@@ -166,6 +145,8 @@ export default {
 
   // dashboard
   getConteoUsuarios,
+  getQuestCompleted,
+  getWeeklyRetention,
   getUsuariosPorNacionalidad,
   getPromedioProgresoPorModulo,
   getUsuariosResueltosPorJuego,
@@ -173,11 +154,6 @@ export default {
   // useractivity
   getMapaCalorProgreso,
   getHistorialDesbloqueos,
-
-  // settings
-  createUsuario,
-  deleteUsuarioPorCorreo,
-  getUsuarioPorCorreo,
 
   // modules
   getModulosProgreso,

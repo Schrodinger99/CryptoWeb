@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Actividad de Usuarios - CryptoChicks</title>
     <link href="/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -46,26 +46,28 @@
     </script>
 
     <!-- Main content -->
-    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 pr-4 pb-4 pl-4 w-full max-w-5xl mx-auto">
-        <h1 class="text-3xl text-gray-800 dark:text-white font-bold mb-6">Actividad de Usuarios</h1>
-
-        <!-- Error box -->
-        <div id="errorBox" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-            Error al cargar los datos
-        </div>
-
-        <!-- Charts containers -->
-        <div class="grid gap-6">
-            <!-- Heatmap -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border-2 dark:border-gray-800">
-                <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Progreso por Usuario/Módulo</h2>
-                <div id="heatmap-progress" class="w-full h-[400px]"></div>
+    <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 px-4 w-full max-w-7xl mx-auto">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-800 dark:text-white">User Activity</h1>
+            
+            <!-- Error box -->
+            <div id="errorBox" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+                Error al cargar los datos
             </div>
 
-            <!-- Timeline de desbloqueos -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border-2 dark:border-gray-800">
-                <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Historial de Desbloqueos</h2>
-                <div id="timeline-unlocks" class="w-full h-[400px]"></div>
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 gap-3 sm:gap-4">
+                <!-- Heatmap -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border-2 dark:border-gray-800">
+                    <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Progress per User/Modules</h2>
+                    <div id="heatmap-progress" class="w-full h-[400px]"></div>
+                </div>
+
+                <!-- Timeline de desbloqueos -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border-2 dark:border-gray-800">
+                    <h2 class="text-xl font-semibold text-center mb-4 text-black dark:text-white">Unlock history</h2>
+                    <div id="timeline-unlocks" class="w-full h-[400px]"></div>
+                </div>
             </div>
         </div>
     </main>

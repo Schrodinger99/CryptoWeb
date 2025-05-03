@@ -67,7 +67,7 @@ async function initModules() {
             chart.setOption({
                 backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff',
                 title: {
-                    text: 'Progreso Promedio por Módulo',
+                    text: 'Average progress per Module',
                     left: 'center',
                     textStyle: { color: '#000000' }
                 },
@@ -107,7 +107,7 @@ async function initModules() {
             chart.setOption({
                 backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff',
                 title: {
-                    text: 'Preguntas por Módulo',
+                    text: 'Questions per Module',
                     left: 'center',
                     textStyle: { color: '#000000' }
                 },

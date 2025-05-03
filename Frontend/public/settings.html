@@ -3,26 +3,51 @@
     <head>
         <meta charset="UTF-8">
         <title>Settings - CryptoChicks</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <link href="css/output.css" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <body class="bg-gray-100 dark:bg-gray-900 flex">
-        <script>
-          // Prevent access if no token is present
-          if (!localStorage.getItem('token')) {
-            window.location.href = 'login.html';
-          }
+        <script type="module">
+            import { API_BASE } from './javascript/api_url.mjs';
         </script>
         <script type="module">
-          import { API_BASE, getAuthHeaders } from './javascript/api_url.mjs';
-          (async () => {
-            const res = await fetch(`${API_BASE}/check-auth`, { headers: getAuthHeaders() });
-            if (res.status !== 200) {
-              window.location.href = 'login.html';
+            // Importamos el API_BASE correctamente desde 'api_url.mjs'
+            import { API_BASE } from './javascript/api_url.mjs';
+
+            // Prevent access if no token is present or if the role is not 'Admin'
+            const token = localStorage.getItem('token');
+            
+            // Si no hay token, redirigir a login.html
+            if (!token) {
+                window.location.href = 'login.html';
             }
-          })();
+
+            // Verificar el rol
+            async function checkRole() {
+                try {
+                const res = await fetch(`${API_BASE}/check-auth`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                
+                const data = await res.json();
+                
+                // Si el rol no es Admin, redirigir a login.html
+                if (res.status !== 200 || data.rol !== 'Admin') {
+                    window.location.href = 'login.html';
+                }
+                } catch (err) {
+                    console.error('Error al verificar el rol:', err);
+                    window.location.href = 'login.html';  // Redirigir si ocurre un error
+                }
+            }
+            // Verificar el rol del usuario al cargar la página
+            checkRole().catch(() => window.location.href = 'login.html');
         </script>
+        
         <!-- Navbar cargado dinámicamente -->
         <div id="navbar-placeholder"></div>
         <script>
@@ -38,10 +63,10 @@
                 container.innerHTML = html;
                 const logoutBtn = container.querySelector('#logout-btn');
                 if (logoutBtn) {
-                  logoutBtn.addEventListener('click', () => {
-                    localStorage.removeItem('token');
-                    window.location.href = 'logout.html';
-                  });
+                    logoutBtn.addEventListener('click', () => {
+                        localStorage.removeItem('token');
+                        window.location.href = 'logout.html';
+                    });
                 }
             })
             .catch(error => {
@@ -50,63 +75,57 @@
             });
         </script>
 
+
         <!-- Main -->
-        <main class="flex-1 p-10 flex justify-center space-x-10 pt-32 pr-4 pb-4 pl-4">
-            <!-- Mensaje de estado -->
-            <div id="statusMessage" class="fixed top-4 right-4 hidden"></div>
+        <main class="ml-16 group-hover:ml-64 transition-all duration-300 pt-32 px-4 w-full max-w-7xl mx-auto">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-1 justify-items-center">
+                    <div id="statusMessage" class="fixed top-4 right-4 hidden"></div>
 
-            <!-- Create New User -->
-            <form id="createUserForm" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-96">
-                <h2 class="text-xl font-bold mb-4">Crear Usuario Admin</h2>
+                    <!-- Create New User -->
+                    <form id="createUserForm" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-96">
+                        <h2 class="text-xl font-bold mb-4">Create User</h2>
 
-                <label class="block mb-2">Nombre</label>
-                <input type="text" id="usernameField" name="username" placeholder="Nombre del usuario" required class="w-full p-2 mb-4 border rounded-md text-black">
+                        <label class="block mb-2">Name</label>
+                        <input type="text" id="usernameField" name="username" placeholder="Name" required class="w-full p-2 mb-4 border rounded-md text-black">
 
-                <label class="block mb-2">Email</label>
-                <input type="email" id="emailField" name="email" placeholder="Correo electrónico" required class="w-full p-2 mb-4 border rounded-md text-black">
+                        <label class="block mb-2">Email</label>
+                        <input type="email" id="emailField" name="email" placeholder="Email" required class="w-full p-2 mb-4 border rounded-md text-black">
 
-                <label class="block mb-2">Rol</label>
-                <select id="roleField"
-                        name="role"
-                        required
-                        class="w-full p-2 mb-4 border rounded-md text-black">
-                    <option value="Admin">Admin</option>
-                    <option value="Analista">Analista</option>
-                </select>
+                        <label class="block mb-2">Rol</label>
+                        <select id="roleField" name="role" required class="w-full p-2 mb-4 border rounded-md text-black">
+                            <option value="Admin">Admin</option>
+                            <option value="Analytical">Analytical</option>
+                        </select>
 
-                <label class="block mb-2">Contraseña</label>
-                <input type="password" id="passwordField" name="password" placeholder="Contraseña" required class="w-full p-2 mb-4 border rounded-md text-black">
+                        <label class="block mb-2">Password</label>
+                        <input type="password" id="passwordField" name="password" placeholder="Password" required class="w-full p-2 mb-4 border rounded-md text-black">
 
-                <button type="submit"
-                        id="saveUserButton"
-                        class="w-full bg-pink-500 text-white py-2 rounded-md hover:bg-pink-600">
-                    Crear Usuario
-                </button>
-            </form>
+                        <button type="submit" id="saveUserButton" class="w-full bg-pink-500 text-white py-2 rounded-md hover:bg-pink-600">
+                            Create new user
+                        </button>
+                    </form>
 
-            <!-- Delete User -->
-            <form id="deleteUserForm" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-96">
-                <h2 class="text-xl font-bold mb-4">Eliminar Usuario Admin</h2>
+                    <!-- Delete User -->
+                    <form id="deleteUserForm" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-96">
+                        <h2 class="text-xl font-bold mb-4">Delete User</h2>
 
-                <label class="block mb-2">Email</label>
-                <input type="email" id="emailToDelete" name="email" placeholder="Correo del usuario a eliminar" required class="w-full p-2 mb-4 border rounded-md text-black">
+                        <label class="block mb-2">Email</label>
+                        <input type="email" id="emailToDelete" name="email" placeholder="Email of user" required class="w-full p-2 mb-4 border rounded-md text-black">
 
-                <button type="submit"
-                        id="deleteUserButton"
-                        class="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600">
-                    Eliminar Usuario
-                </button>
-            </form>
+                        <button type="submit" id="deleteUserButton" class="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600">
+                            Delete User
+                        </button>
+                    </form>
+                </div>
+            </div>
         </main>
 
-        <!-- End Message -->
         <div id="endMessage" class="hidden fixed bottom-4 right-4 bg-green-100 p-4 rounded-lg shadow-md">
             <p id="result" class="text-green-700 mb-2"></p>
             <a href="/settings.html" class="text-blue-500 hover:underline">Volver</a>
         </div>
 
-        <!-- Scripts -->
-        <script type="module" src="./javascript/api_url.mjs"></script>
         <script type="module" src="./javascript/settings.mjs"></script>
         <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
     </body>

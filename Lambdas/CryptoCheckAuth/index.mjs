@@ -1,4 +1,3 @@
-// IMPORTAR jsonwebtoken
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -16,16 +15,17 @@ export const handler = async (event) => {
       return { statusCode: 401, body: 'No hay token' };
     }
 
-    // USAR jwt.verify (ahora sí definido)
+    // USAR jwt.verify para verificar el token y extraer los datos
     const data = jwt.verify(token, JWT_SECRET);
 
+    // Devolver el token y la información del usuario (incluyendo rol)
     return {
       statusCode: 200,
       body: JSON.stringify({
-        id:       data.id,
+        id: data.id,
         username: data.username,
-        email:    data.email,
-        rol:      data.rol
+        email: data.email,
+        rol: data.rol  // Aquí estamos pasando el rol del usuario
       })
     };
   } catch (err) {

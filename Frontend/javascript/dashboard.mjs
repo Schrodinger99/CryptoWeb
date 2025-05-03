@@ -23,8 +23,10 @@ async function initDashboard() {
     console.log('API_BASE:', API_BASE);
 
     // Hacer las peticiones en paralelo (una sola vez)
-    const [countData, nacionalidades, modulos, juegos] = await Promise.all([
+    const [countData, questData, weeklyData, nacionalidades, modulos, juegos] = await Promise.all([
         fetchWithCheck(`${DATA_URL}/usuarios/count`),
+        fetchWithCheck(`${DATA_URL}/usuarios/quest`),
+        fetchWithCheck(`${DATA_URL}/usuarios/weekly`),
         fetchWithCheck(`${DATA_URL}/usuarios/nacionalidad`),
         fetchWithCheck(`${DATA_URL}/progreso/modulos`),
         fetchWithCheck(`${DATA_URL}/juegos/resueltos`)
@@ -32,10 +34,20 @@ async function initDashboard() {
 
     console.log('Datos recibidos:', { countData, nacionalidades, modulos, juegos });
 
-    // === 1. Card: Total de usuarios registrados ===
+    // Update cards with data
     const totalElement = document.getElementById('totalUsuarios');
     if (totalElement) {
       totalElement.textContent = countData.total || '0';
+    }
+
+    const questElement = document.getElementById('questsCompleted');
+    if (questElement) {
+      questElement.textContent = questData.total || '0';
+    }
+
+    const weeklyElement = document.getElementById('weeklyRetention');
+    if (weeklyElement) {
+      weeklyElement.textContent = `${weeklyData.total || '0'}%`;
     }
 
     // === 2. Pie chart: Usuarios por nacionalidad ===
@@ -44,7 +56,7 @@ async function initDashboard() {
       const pieChart = echarts.init(pieDom, currentTheme());
       pieChart.setOption({
         backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff',
-        title: { text: 'Usuarios por nacionalidad', left: 'center' },
+        title: { text: 'Users per nationality', left: 'center' },
         tooltip: { trigger: 'item' },
         legend: { orient: 'vertical', left: 'left' },
         series: [{
@@ -62,7 +74,7 @@ async function initDashboard() {
       const barChart = echarts.init(barDom, currentTheme());
       barChart.setOption({
         backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff',
-        title: { text: 'Avance promedio por módulo', left: 'center' },
+        title: { text: 'Progress per modules', left: 'center' },
         tooltip: { trigger: 'axis' },
         xAxis: { type: 'category', data: modulos.map(m => `Módulo ${m.id_modulo}`) },
         yAxis: { type: 'value', axisLabel: { formatter: '{value}%' } },
@@ -79,7 +91,7 @@ async function initDashboard() {
       const qChart = echarts.init(qDom, currentTheme());
       qChart.setOption({
         backgroundColor: currentTheme() === 'dark' ? '#1f2937' : '#ffffff',
-        title: { text: 'Quests completadas por tipo', left: 'center' },
+        title: { text: 'Quests completed per type', left: 'center' },
         tooltip: { trigger: 'axis' },
         xAxis: { type: 'category', data: juegos.map(j => j.juego) },
         yAxis: { type: 'value' },
